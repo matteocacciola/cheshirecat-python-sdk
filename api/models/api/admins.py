@@ -1,38 +1,38 @@
-from dataclasses import dataclass
 from typing import Dict, List, Any
-from plugins import PluginToggleOutput
+from pydantic import BaseModel
+
+from api.models.api.plugins import PluginToggleOutput
 
 
-@dataclass
-class AdminOutput:
+class AdminOutput(BaseModel):
     username: str
     permissions: Dict[str, List[str]]
     id: str
 
-@dataclass
-class CreatedOutput:
+
+class CreatedOutput(BaseModel):
     created: bool
 
-@dataclass
-class PluginDeleteOutput:
+
+class PluginDeleteOutput(BaseModel):
     deleted: str
 
-@dataclass
-class PluginDetailsOutput:
+
+class PluginDetailsOutput(BaseModel):
     data: Dict[str, Any]
 
-@dataclass
+
 class PluginInstallFromRegistryOutput(PluginToggleOutput):
     url: str
     info: str
 
-@dataclass
+
 class PluginInstallOutput(PluginToggleOutput):
     filename: str
     content_type: str
 
-@dataclass
-class ResetOutput:
+
+class ResetOutput(BaseModel):
     deleted_settings: bool
     deleted_memories: bool
     deleted_plugin_folders: bool

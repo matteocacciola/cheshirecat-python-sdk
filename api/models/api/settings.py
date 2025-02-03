@@ -1,23 +1,22 @@
-from dataclasses import dataclass
 from typing import Dict, List, Any
+from pydantic import BaseModel
 
 
-@dataclass
-class SettingDeleteOutput:
+class SettingDeleteOutput(BaseModel):
     deleted: bool
 
-@dataclass
-class SettingOutput:
+
+class SettingOutput(BaseModel):
     name: str
     value: Dict[str, Any]
     category: str
     setting_id: str
     updated_at: int | str
 
-@dataclass
-class SettingOutputItem:
+
+class SettingOutputItem(BaseModel):
     setting: SettingOutput
 
-@dataclass
-class SettingsOutputCollection:
+
+class SettingsOutputCollection(BaseModel):
     settings: List[SettingOutput]

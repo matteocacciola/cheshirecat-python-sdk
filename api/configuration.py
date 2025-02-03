@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class Configuration:
+class Configuration(BaseModel):
     """
     Class containing all the configuration options and variables used by the package
     """

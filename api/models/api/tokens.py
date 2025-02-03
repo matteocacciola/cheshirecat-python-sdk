@@ -1,7 +1,6 @@
-from dataclasses import dataclass
+from pydantic import BaseModel
 
 
-@dataclass
-class TokenOutput:
+class TokenOutput(BaseModel):
     access_token: str
     token_type: str | None = "bearer"

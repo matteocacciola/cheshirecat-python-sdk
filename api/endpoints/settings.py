@@ -3,9 +3,7 @@ from api.models.api.settings import SettingsOutputCollection, SettingOutputItem
 
 
 class SettingsEndpoint(AbstractEndpoint):
-    from api import CheshireCatClient
-
-    def __init__(self, client: CheshireCatClient):
+    def __init__(self, client: "CheshireCatClient"):
         super().__init__(client)
         self.prefix = "/settings"
 

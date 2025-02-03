@@ -1,14 +1,13 @@
-from dataclasses import dataclass
 from typing import Dict, List, Any
+from pydantic import BaseModel
 
 
-@dataclass
-class FactoryObjectSettingOutput:
+class FactoryObjectSettingOutput(BaseModel):
     name: str
     value: Dict[str, Any]
     scheme: Dict[str, Any] | None = None
 
-@dataclass
-class FactoryObjectSettingsOutput:
+
+class FactoryObjectSettingsOutput(BaseModel):
     settings: List[FactoryObjectSettingOutput]
     selected_configuration: str

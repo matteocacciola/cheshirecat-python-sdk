@@ -5,9 +5,7 @@ from api.models.api.factories import FactoryObjectSettingOutput, FactoryObjectSe
 
 
 class EmbedderEndpoint(AbstractEndpoint):
-    from api import CheshireCatClient
-
-    def __init__(self, client: CheshireCatClient):
+    def __init__(self, client: "CheshireCatClient"):
         super().__init__(client)
         self.prefix = "/embedder"
 

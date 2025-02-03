@@ -17,9 +17,7 @@ from api.utils import deserialize
 
 
 class AdminsEndpoint(AbstractEndpoint):
-    from api import CheshireCatClient
-
-    def __init__(self, client: CheshireCatClient):
+    def __init__(self, client: "CheshireCatClient"):
         super().__init__(client)
         self.prefix = "/admins"
 

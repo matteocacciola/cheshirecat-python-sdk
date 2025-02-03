@@ -1,9 +1,9 @@
+import asyncio
 from abc import ABC, abstractmethod
-
-import aiohttp
-import requests
+from aiohttp import ClientSession
+from requests_toolbelt.sessions import BaseUrlSession
 from urllib.parse import urlunparse
-from typing import Callable, Dict, Any
+from typing import Callable, List, Any
 from requests.adapters import BaseAdapter
 
 
@@ -29,17 +29,16 @@ class HttpClientMixin(ABC):
         self.token = None
         self.user_id = None
         self.agent_id = None
+        self.headers = {}
 
-        self.middlewares: Dict[str, Callable] = {
-            "before_secure_request": self.before_secure_request(),
-            "before_jwt_request": self.before_jwt_request(),
-        }
+        self.middlewares: List[Callable] = [
+            self.before_secure_request,
+            self.before_jwt_request,
+        ]
 
         scheme = "https" if is_https else "http"
         netloc = f"{host}:{port}" if port else host
         self.http_uri = urlunparse((scheme, netloc, "", "", "", ""))
-
-        self.http_client = self.create_http_client()
 
     def set_token(self, token: str):
         self.token = token
@@ -48,67 +47,46 @@ class HttpClientMixin(ABC):
     def get_http_uri(self) -> str:
         return self.http_uri
 
-    def before_secure_request(self) -> Callable:
-        def middleware(request: requests.PreparedRequest, **kwargs):
-            if self.apikey:
-                request.headers["Authorization"] = f"Bearer {self.apikey}"
-            if self.user_id:
-                request.headers["user_id"] = self.user_id
-            if self.agent_id:
-                request.headers["agent_id"] = self.agent_id
-            return request
+    def before_secure_request(self):
+        if self.apikey:
+            self.headers["Authorization"] = f"Bearer {self.apikey}"
+        if self.user_id:
+            self.headers["user_id"] = self.user_id
+        if self.agent_id:
+            self.headers["agent_id"] = self.agent_id
 
-        return middleware
+    def before_jwt_request(self):
+        if self.token:
+            self.headers["Authorization"] = f"Bearer {self.token}"
+        if self.agent_id:
+            self.headers["agent_id"] = self.agent_id
 
-    def before_jwt_request(self) -> Callable:
-        def middleware(request: requests.PreparedRequest, **kwargs):
-            if self.token:
-                request.headers["Authorization"] = f"Bearer {self.token}"
-            if self.agent_id:
-                request.headers["agent_id"] = self.agent_id
-            return request
+    def get_client(self, agent_id: str | None = None, user_id: str | None = None) -> BaseUrlSession:
+        if not self.apikey and not self.token:
+            raise ValueError("You must provide an apikey or a token")
 
-        return middleware
+        self.agent_id = agent_id or "agent"
+        self.user_id = user_id
+
+        for middleware in self.middlewares:
+            middleware()
+
+        return self.get_session()
 
     @abstractmethod
-    def create_http_client(self) -> Any:
-        pass
-
-    @abstractmethod
-    def get_client(self, agent_id: str | None = None, user_id: str | None = None) -> Any:
+    def get_session(self) -> Any:
         pass
 
 
 class HttpClient(HttpClientMixin):
-    def create_http_client(self) -> requests.Session:
-        session = requests.Session()
-        for middleware in self.middlewares.values():
-            adapter = MiddlewareAdapter(middleware)
-            session.mount(self.http_uri, adapter)
+    def get_session(self) -> BaseUrlSession:
+        session = BaseUrlSession(base_url=self.http_uri)
+        session.headers = self.headers
+
         return session
-
-    def get_client(self, agent_id: str | None = None, user_id: str | None = None) -> requests.Session:
-        if not self.apikey and not self.token:
-            raise ValueError("You must provide an apikey or a token")
-
-        self.agent_id = agent_id or "agent"
-        self.user_id = user_id
-
-        return self.http_client
 
 
 class AsyncHttpClient(HttpClientMixin):
-    def create_http_client(self) -> aiohttp.ClientSession:
-        return aiohttp.ClientSession(base_url=self.http_uri)
-
-    def get_client(self, agent_id: str | None = None, user_id: str | None = None) -> aiohttp.ClientSession:
-        if not self.apikey and not self.token:
-            raise ValueError("You must provide an apikey or a token")
-
-        self.agent_id = agent_id or "agent"
-        self.user_id = user_id
-
-        headers = {}
-        for middleware in self.middlewares.values():
-            headers.update(middleware())
-        return aiohttp.ClientSession(base_url=self.http_uri, headers=headers)
+    def get_session(self) -> ClientSession:
+        loop = asyncio.get_event_loop()
+        return ClientSession(base_url=self.http_uri, headers=self.headers, loop=loop)

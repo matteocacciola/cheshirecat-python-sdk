@@ -1,22 +1,21 @@
-from dataclasses import dataclass
 from typing import Dict, Any
+from pydantic import BaseModel
 
 
-@dataclass
-class PropertySettingsOutput:
+class PropertySettingsOutput(BaseModel):
     default: Any
     title: str
     type: str
     extra: Dict[str, Any] | None = None
 
-@dataclass
-class PluginSchemaSettings:
+
+class PluginSchemaSettings(BaseModel):
     title: str
     type: str
     properties: Dict[str, PropertySettingsOutput]
 
-@dataclass
-class PluginSettingsOutput:
+
+class PluginSettingsOutput(BaseModel):
     name: str
     value: Dict[str, Any]
     scheme: PluginSchemaSettings | None = None

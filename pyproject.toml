@@ -9,9 +9,10 @@ authors = [
 ]
 dependencies = [
     "aiohttp",
+    "pydantic",
     "pylint",
     "pylint-actions",
-    "requests",
+    "requests-toolbelt",
     "websockets",
 ]
 

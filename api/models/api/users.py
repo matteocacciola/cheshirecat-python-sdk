@@ -1,9 +1,8 @@
-from dataclasses import dataclass
 from typing import Dict, List
+from pydantic import BaseModel
 
 
-@dataclass
-class UserOutput:
+class UserOutput(BaseModel):
     username: str
     permissions: Dict[str, List[str]]
     id: str

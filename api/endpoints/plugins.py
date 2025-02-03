@@ -4,9 +4,7 @@ from api.models.api.plugins import PluginCollectionOutput, PluginToggleOutput, P
 
 
 class PluginsEndpoint(AbstractEndpoint):
-    from api import CheshireCatClient
-
-    def __init__(self, client: CheshireCatClient):
+    def __init__(self, client: "CheshireCatClient"):
         super().__init__(client)
         self.prefix = "/plugins"
 

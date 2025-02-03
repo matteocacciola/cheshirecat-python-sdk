@@ -1,12 +1,6 @@
-from dataclasses import dataclass
-from typing import List, Dict
+from typing import List
+from pydantic import BaseModel
 
 
-@dataclass
-class AllowedMimeTypesOutput:
+class AllowedMimeTypesOutput(BaseModel):
     allowed: List[str]
-
-    def to_dict(self) -> Dict[str, List[str]]:
-        return {
-            "allowed": self.allowed,
-        }

@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import Dict, List, Any
+from typing import Dict, List
+from pydantic import BaseModel
 
 from api.models.api.nested.memories import (
     CollectionsItem,
@@ -12,46 +12,39 @@ from api.models.api.nested.memories import (
 from api.models.dtos import MemoryPoint
 
 
-@dataclass
-class CollectionPointsDestroyOutput:
+class CollectionPointsDestroyOutput(BaseModel):
     deleted: Dict[str, bool]
 
-@dataclass
-class CollectionsOutput:
+
+class CollectionsOutput(BaseModel):
     collections: List[CollectionsItem]
 
-@dataclass
-class ConversationHistoryDeleteOutput:
+class ConversationHistoryDeleteOutput(BaseModel):
     deleted: bool
 
-@dataclass
-class ConversationHistoryOutput:
+
+class ConversationHistoryOutput(BaseModel):
     history: List[ConversationHistoryItem]
 
-    def to_dict(self) -> Dict[str, List[Dict[str, Any]]]:
-        return {
-            "history": [item.to_dict() for item in self.history]
-        }
 
-@dataclass
-class MemoryPointDeleteOutput:
+class MemoryPointDeleteOutput(BaseModel):
     deleted: str
 
-@dataclass
+
 class MemoryPointOutput(MemoryPoint):
     id: str
     vector: List[float]
 
-@dataclass
-class MemoryPointsDeleteByMetadataOutput:
+
+class MemoryPointsDeleteByMetadataOutput(BaseModel):
     deleted: MemoryPointsDeleteByMetadataInfo
 
-@dataclass
-class MemoryPointsOutput:
+
+class MemoryPointsOutput(BaseModel):
     points: List[Record]
     next_offset: str | int | None = None
 
-@dataclass
-class MemoryRecallOutput:
+
+class MemoryRecallOutput(BaseModel):
     query: MemoryRecallQuery
     vectors: MemoryRecallVectors

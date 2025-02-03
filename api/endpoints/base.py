@@ -13,9 +13,7 @@ class MultipartPayload:
 
 
 class AbstractEndpoint(ABC):
-    from api import CheshireCatClient
-
-    def __init__(self, client: CheshireCatClient):
+    def __init__(self, client: "CheshireCatClient"):
         self.client = client
         self.prefix = ""
         self.system_id = "system"

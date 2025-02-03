@@ -7,9 +7,7 @@ from api.utils import deserialize
 
 
 class UsersEndpoint(AbstractEndpoint):
-    from api import CheshireCatClient
-
-    def __init__(self, client: CheshireCatClient):
+    def __init__(self, client: "CheshireCatClient"):
         super().__init__(client)
         self.prefix = "/users"
 
@@ -18,7 +16,7 @@ class UsersEndpoint(AbstractEndpoint):
         This endpoint is used to get a token for the user. The token is used to authenticate the user in the system. When
         the token expires, the user must request a new token.
         """
-        http_client = self.client.http_client.create_http_client()
+        http_client = self.client.http_client.get_client()
 
         response = http_client.post("/auth/token", json={
             "username": username,

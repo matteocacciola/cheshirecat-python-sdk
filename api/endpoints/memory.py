@@ -1,6 +1,6 @@
 from typing import Dict, Any
 
-from api import Collection, Role
+from api.enums import Collection, Role
 from api.endpoints.base import AbstractEndpoint
 from api.models.api.memories import (
     CollectionsOutput,
@@ -17,9 +17,7 @@ from api.models.dtos import Why, MemoryPoint
 
 
 class MemoryEndpoint(AbstractEndpoint):
-    from api import CheshireCatClient
-
-    def __init__(self, client: CheshireCatClient):
+    def __init__(self, client: "CheshireCatClient"):
         super().__init__(client)
         self.prefix = "/memory"
 
@@ -139,7 +137,7 @@ class MemoryEndpoint(AbstractEndpoint):
         if audio:
             payload["audio"] = audio
         if why:
-            payload["why"] = why.to_dict()
+            payload["why"] = why.model_dump()
 
         return self.post_json(
             self.format_url("/conversation_history"),
@@ -213,7 +211,7 @@ class MemoryEndpoint(AbstractEndpoint):
         return self.post_json(
             self.format_url(f"/collections/{collection}/points"),
             MemoryPointOutput,
-            memory_point.to_dict(),
+            memory_point.model_dump(),
             agent_id,
         )
 
@@ -244,7 +242,7 @@ class MemoryEndpoint(AbstractEndpoint):
         return self.put(
             self.format_url(f"/collections/{collection}/points/{point_id}"),
             MemoryPointOutput,
-            memory_point.to_dict(),
+            memory_point.model_dump(),
             agent_id,
         )
 

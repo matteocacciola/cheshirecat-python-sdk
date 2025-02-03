@@ -17,7 +17,7 @@ class MessageEndpoint(AbstractEndpoint):
         :param agent_id: the agent id, if None the message is sent to the default agent
         :param user_id: the user id, if None the message is considered as sent by the default user
         """
-        return self.post_json('/message', MessageOutput, message.to_dict(), agent_id, user_id)
+        return self.post_json('/message', MessageOutput, message.model_dump(), agent_id, user_id)
 
     async def send_websocket_message(
         self,
@@ -34,7 +34,7 @@ class MessageEndpoint(AbstractEndpoint):
         :param callback: callable, a callback function that will be called for each message received
         """
         try:
-            json_data = json.dumps(message.to_dict())
+            json_data = json.dumps(message.model_dump())
         except Exception:
             raise RuntimeError("Error encoding message")
 
