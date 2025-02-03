@@ -1,0 +1,41 @@
+[project]
+name = "Cheshire-Cat-Python-SDK"
+description = "Python SDK for the Cloud-ready fork of the Cheshire Cat"
+version = "1.0.0"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Matteo Cacciola" },
+]
+dependencies = [
+    "aiohttp",
+    "pylint",
+    "pylint-actions",
+    "requests",
+    "websockets",
+]
+
+[tool.coverage.run]
+source = ["api"]
+
+[tool.pylint]
+max-line-length = 120
+disable = [
+    "C0301",
+    "C0103",
+    "C0114",
+    "E1120",
+    "E0401",
+    "C0115",
+    "C0116",
+    "E1101",
+    "R0801",
+    "C0202",
+    "W0406",
+    "W1514",
+    "W0201",
+    "W0511",
+]
+
+[tool.pylint.main]
+load-plugins = "pylint_actions, perflint"
