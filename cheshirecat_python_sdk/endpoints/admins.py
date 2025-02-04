@@ -13,7 +13,7 @@ from cheshirecat_python_sdk.models.api.admins import (
 from cheshirecat_python_sdk.models.api.nested.plugins import PluginSettingsOutput
 from cheshirecat_python_sdk.models.api.plugins import PluginCollectionOutput, PluginsSettingsOutput
 from cheshirecat_python_sdk.models.api.tokens import TokenOutput
-from cheshirecat_python_sdk.utils import deserialize
+from cheshirecat_python_sdk.utils import deserialize, file_attributes
 
 
 class AdminsEndpoint(AbstractEndpoint):
@@ -166,7 +166,7 @@ class AdminsEndpoint(AbstractEndpoint):
         payload = MultipartPayload()
 
         with open(path_zip, "rb") as file:
-            payload.files = [(path_zip, file)]
+            payload.files = [("file", file_attributes(path_zip, file))]
             result = self.post_multipart(
                 self.format_url("/plugins/upload"), PluginInstallOutput, payload, self.system_id
             )

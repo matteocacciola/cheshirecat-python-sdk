@@ -1,4 +1,4 @@
-from cheshirecat_python_sdk.clients import HttpClient, WSClient, AsyncHttpClient
+from cheshirecat_python_sdk.clients import HttpClient, WSClient
 from cheshirecat_python_sdk.configuration import Configuration
 from cheshirecat_python_sdk.endpoints import (
     AdminsEndpoint,
@@ -23,12 +23,6 @@ class CheshireCatClient:
             apikey=configuration.auth_key,
             is_https=configuration.secure_connection
         )
-        self.__async_http_client = AsyncHttpClient(
-            host=configuration.host,
-            port=configuration.port,
-            apikey=configuration.auth_key,
-            is_https=configuration.secure_connection
-        )
         self.__ws_client = WSClient(
             host=configuration.host,
             port=configuration.port,
@@ -38,18 +32,6 @@ class CheshireCatClient:
 
         if token:
             self.add_token(token)
-
-        self.admins = AdminsEndpoint(self)
-        self.auth_handler = AuthHandlerEndpoint(self)
-        self.embedder = EmbedderEndpoint(self)
-        self.file_manager = FileManagerEndpoint(self)
-        self.large_language_model = LargeLanguageModelEndpoint(self)
-        self.memory = MemoryEndpoint(self)
-        self.message = MessageEndpoint(self)
-        self.plugins = PluginsEndpoint(self)
-        self.rabbit_hole = RabbitHoleEndpoint(self)
-        self.settings = SettingsEndpoint(self)
-        self.users = UsersEndpoint(self)
 
     def add_token(self, token: str) -> 'CheshireCatClient':
         self.__ws_client.set_token(token)
@@ -61,9 +43,49 @@ class CheshireCatClient:
         return self.__http_client
 
     @property
-    def async_http_client(self) -> AsyncHttpClient:
-        return self.__async_http_client
-
-    @property
     def ws_client(self) -> WSClient:
         return self.__ws_client
+
+    @property
+    def admins(self):
+        return AdminsEndpoint(self)
+
+    @property
+    def auth_handler(self):
+        return AuthHandlerEndpoint(self)
+
+    @property
+    def embedder(self):
+        return EmbedderEndpoint(self)
+
+    @property
+    def file_manager(self):
+        return FileManagerEndpoint(self)
+
+    @property
+    def large_language_model(self):
+        return LargeLanguageModelEndpoint(self)
+
+    @property
+    def memory(self):
+        return MemoryEndpoint(self)
+
+    @property
+    def message(self):
+        return MessageEndpoint(self)
+
+    @property
+    def plugins(self):
+        return PluginsEndpoint(self)
+
+    @property
+    def rabbit_hole(self):
+        return RabbitHoleEndpoint(self)
+
+    @property
+    def settings(self):
+        return SettingsEndpoint(self)
+
+    @property
+    def users(self):
+        return UsersEndpoint(self)

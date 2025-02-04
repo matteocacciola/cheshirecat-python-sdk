@@ -1,13 +1,13 @@
 from abc import ABC
 from typing import Dict, Any, List, Tuple, Type
-import aiohttp
 import requests
+from pydantic import BaseModel
 from websockets import ClientConnection
 
 from cheshirecat_python_sdk.utils import T, deserialize
 
 
-class MultipartPayload:
+class MultipartPayload(BaseModel):
     data: Dict[str, Any] | None = None
     files: List[Tuple] | None = None
 
@@ -23,9 +23,6 @@ class AbstractEndpoint(ABC):
 
     def get_http_client(self, agent_id: str | None = None, user_id: str | None = None) -> requests.Session:
         return self.client.http_client.get_client(agent_id, user_id)
-
-    def get_async_http_client(self, agent_id: str | None = None, user_id: str | None = None) -> aiohttp.ClientSession:
-        return self.client.async_http_client.get_client(agent_id, user_id)
 
     async def get_ws_client(self, agent_id: str | None = None, user_id: str | None = None) -> ClientConnection:
         return await self.client.ws_client.get_client(agent_id, user_id)

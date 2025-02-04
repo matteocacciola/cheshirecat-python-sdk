@@ -1,10 +1,14 @@
 import json
 from pathlib import Path
 from typing import Dict, Any, List
-import aiohttp
 
-from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
-from cheshirecat_python_sdk.models.api.rabbitholes import AllowedMimeTypesOutput
+from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint, MultipartPayload
+from cheshirecat_python_sdk.models.api.rabbit_holes import (
+    AllowedMimeTypesOutput,
+    UploadSingleFileResponse,
+    UploadUrlResponse,
+)
+from cheshirecat_python_sdk.utils import deserialize, file_attributes
 
 
 class RabbitHoleEndpoint(AbstractEndpoint):
@@ -12,7 +16,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         super().__init__(client)
         self.prefix = "/rabbithole"
 
-    async def post_file(
+    def post_file(
         self,
         file_path,
         file_name: str | None = None,
@@ -20,7 +24,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         chunk_overlap: int | None = None,
         agent_id: str | None = None,
         metadata: Dict[str, Any] | None = None,
-    ) -> aiohttp.ClientResponse:
+    ) -> UploadSingleFileResponse:
         """
         This method posts a file to the RabbitHole API. The file is uploaded to the RabbitHole server and ingested into
         the RAG system. The file is then processed by the RAG system and the results are stored in the RAG database.
@@ -36,32 +40,28 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         """
         file_name = file_name or Path(file_path).name
 
-        data = aiohttp.FormData()
-        with open(file_path, "rb") as f:
-            data.add_field("file", f, filename=file_name)
-
+        payload = MultipartPayload(data={})
         if chunk_size is not None:
-            data.add_field("chunk_size", str(chunk_size))
-
+            payload.data["chunk_size"] = chunk_size
         if chunk_overlap is not None:
-            data.add_field("chunk_overlap", str(chunk_overlap))
-
+            payload.data["chunk_overlap"] = chunk_overlap
         if metadata is not None:
-            data.add_field("metadata", json.dumps(metadata))
+            payload.data["metadata"] = json.dumps(metadata)
 
-        async with self.get_async_http_client(agent_id) as client:
-            result = await client.post(self.prefix, data=data)
-            await client.close()
-            return result
+        with open(file_path, "rb") as file:
+            payload.files = [("file", file_attributes(file_name, file))]
+            result = self.post_multipart(self.prefix, UploadSingleFileResponse, payload, agent_id)
 
-    async def post_files(
+        return result
+
+    def post_files(
         self,
         file_paths: List[str],
         chunk_size: int | None = None,
         chunk_overlap: int | None = None,
         agent_id: str | None = None,
         metadata: Dict[str, Any] | None = None
-    ) -> aiohttp.ClientResponse:
+    ) -> Dict[str, UploadSingleFileResponse]:
         """
         Posts multiple files to the RabbitHole API. The files are uploaded to the RabbitHole server and
         ingested into the RAG system. The files are processed in a batch. The process is asynchronous.
@@ -73,34 +73,40 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         :param metadata: The metadata to include with the files.
         :return: The response from the RabbitHole API.
         """
-        data = aiohttp.FormData()
-
-        for file_path in file_paths:
-            with open(file_path, "rb") as f:
-                data.add_field("files", f, filename=Path(file_path).name)
-
+        data = {}
         if chunk_size is not None:
-            data.add_field("chunk_size", str(chunk_size))
-
+            data["chunk_size"] = chunk_size
         if chunk_overlap is not None:
-            data.add_field("chunk_overlap", str(chunk_overlap))
-
+            data["chunk_overlap"] = chunk_overlap
         if metadata is not None:
-            data.add_field("metadata", json.dumps(metadata))
+            data["metadata"] = json.dumps(metadata)
 
-        async with self.get_async_http_client(agent_id) as client:
-            result = await client.post(f"{self.prefix}/batch", data=data)
-            await client.close()
+        files = []
+        file_handles = []
+        try:
+            for file_path in file_paths:
+                file = open(file_path, "rb")
+                file_handles.append(file)
+                files.append(("files", file_attributes(Path(file_path).name, file)))
+
+            response = self.get_http_client(agent_id).post(self.format_url("/batch"), data=data, files=files)
+
+            result = {}
+            for key, item in response.json().items():
+                result[key] = deserialize(item, UploadSingleFileResponse)
             return result
+        finally:
+            for file in file_handles:
+                file.close()
 
-    async def post_web(
+    def post_web(
         self,
         web_url: str,
         chunk_size: int | None = None,
         chunk_overlap: int | None = None,
         agent_id: str | None = None,
         metadata: Dict[str, Any] | None = None
-    ) -> aiohttp.ClientResponse:
+    ) -> UploadUrlResponse:
         """
         Posts a web URL to the RabbitHole API. The web URL is ingested into the RAG system. The web URL is
         processed by the RAG system by Web scraping and the results are stored in the RAG database.
@@ -124,17 +130,14 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         if metadata is not None:
             payload["metadata"] = metadata
 
-        async with self.get_async_http_client(agent_id) as client:
-            result= await client.post(f"{self.prefix}/web", json=payload)
-            await client.close()
-            return result
+        return self.post_json(f"{self.prefix}/web", UploadUrlResponse, payload, agent_id)
 
-    async def post_memory(
+    def post_memory(
         self,
         file_path: str,
         file_name: str | None = None,
         agent_id: str | None = None
-    ) -> aiohttp.ClientResponse:
+    ) -> UploadSingleFileResponse:
         """
         Posts a memory point, either for the agent identified by the agent_id parameter (for multi-agent
         installations) or for the default agent (for single-agent installations). The memory point is ingested into the
@@ -147,14 +150,12 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         """
         file_name = file_name or Path(file_path).name
 
-        data = aiohttp.FormData()
-        with open(file_path, "rb") as f:
-            data.add_field("file", f, filename=file_name)
+        payload = MultipartPayload()
+        with open(file_path, "rb") as file:
+            payload.files = [("file", file_attributes(file_name, file))]
+            result = self.post_multipart(f"{self.prefix}/memory", UploadSingleFileResponse, payload, agent_id)
 
-        async with self.get_async_http_client(agent_id) as client:
-            result = await client.post(f"{self.prefix}/memory", data=data)
-            await client.close()
-            return result
+        return result
 
     def get_allowed_mime_types(self, agent_id: str | None = None) -> AllowedMimeTypesOutput:
         """
