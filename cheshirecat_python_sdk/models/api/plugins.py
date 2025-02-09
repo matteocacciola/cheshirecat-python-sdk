@@ -18,6 +18,16 @@ class ToolOutput(BaseModel):
     name: str
 
 
+
+class FormOutput(BaseModel):
+    name: str
+
+
+class EndpointOutput(BaseModel):
+    name: str
+    tags: List[str]
+
+
 class PluginItemOutput(BaseModel):
     id: str
     name: str
@@ -31,6 +41,8 @@ class PluginItemOutput(BaseModel):
     active: bool
     hooks: List[HookOutput]
     tools: List[ToolOutput]
+    forms: List[FormOutput]
+    endpoints: List[EndpointOutput]
 
 
 class PluginCollectionOutput(BaseModel):
