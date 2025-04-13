@@ -22,8 +22,7 @@ class MemoryPoint(BaseModel):
 
 class MessageBase(BaseModel):
     text: str
-    images: List[str] | None = Field(default_factory=list)
-    audio: List[str] | None = Field(default_factory=list)
+    image: str | bytes | None = None
 
 
 class Message(MessageBase):

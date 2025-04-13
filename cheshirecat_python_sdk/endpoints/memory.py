@@ -109,8 +109,7 @@ class MemoryEndpoint(AbstractEndpoint):
         self,
         who: Role,
         text: str,
-        images: Dict[str, Any] | None = None,
-        audio: Dict[str, Any] | None = None,
+        image: str | bytes | None = None,
         why: Why | None = None,
         agent_id: str | None = None,
         user_id: str | None = None
@@ -121,8 +120,7 @@ class MemoryEndpoint(AbstractEndpoint):
         user_id parameter is provided, the conversation history is added to the user ID.
         :param who: The role of the user in the conversation.
         :param text: The text of the conversation history entry.
-        :param images: The images of the conversation history entry.
-        :param audio: The audio of the conversation history entry.
+        :param image: The image of the conversation history entry.
         :param why: The reason for the conversation history entry.
         :param agent_id: The agent ID for multi-agent installations. If not provided, the default agent is used.
         :param user_id: The user ID to filter the conversation history.
@@ -132,10 +130,8 @@ class MemoryEndpoint(AbstractEndpoint):
             "who": who.value,
             "text": text,
         }
-        if images:
-            payload["images"] = images
-        if audio:
-            payload["audio"] = audio
+        if image:
+            payload["image"] = image
         if why:
             payload["why"] = why.model_dump()
 
