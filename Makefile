@@ -24,3 +24,7 @@ compile-requirements: ## Compile requirements for the local virtual environment.
 
 update-requirements: ## Compile requirements for the local virtual environment.
 	$(PIP_COMPILE) --upgrade --output-file requirements.txt pyproject.toml
+
+publish:  ## Publish the package to PyPI.
+	${PYTHON} -m build
+	${PYTHON} -m twine upload dist/*

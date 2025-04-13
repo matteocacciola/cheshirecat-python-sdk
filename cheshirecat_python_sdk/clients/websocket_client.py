@@ -16,6 +16,7 @@ class WSClient:
         self.apikey = apikey
         self.token = None
         self.is_wss = is_wss
+        self.ws_client = None
 
     def set_token(self, token: str) -> "WSClient":
         self.token = token
@@ -42,9 +43,12 @@ class WSClient:
 
     async def get_client(self, agent_id: str | None = None, user_id: str | None = None) -> ClientConnection:
         uri = self.get_ws_uri(agent_id, user_id)
-        try:
-            # Create a WebSocket connection
-            websocket = await connect(uri, ping_interval=100000, ping_timeout=100000)
-            return websocket
-        except InvalidURI as e:
-            raise ValueError(f"Invalid WebSocket URI: {uri}") from e
+        if self.ws_client is None:
+            try:
+                # Create a WebSocket connection
+                websocket = await connect(uri, ping_interval=100000, ping_timeout=100000)
+                self.ws_client = websocket
+            except InvalidURI as e:
+                raise ValueError(f"Invalid WebSocket URI: {uri}") from e
+
+        return self.ws_client
