@@ -54,11 +54,11 @@ cheshire_cat_client = CheshireCatClient(configuration)
 
 # file
 file = "path/to/file"
-result = asyncio.run(cheshire_cat_client.rabbit_hole.post_file(file, None, None))
+result = asyncio.run(cheshire_cat_client.rabbit_hole.post_file(file))
 
 # url
 url = "https://www.google.com"
-result = asyncio.run(cheshire_cat_client.rabbit_hole.post_web(url, None, None))
+result = asyncio.run(cheshire_cat_client.rabbit_hole.post_web(url))
 ```
 
 Memory management utilities:

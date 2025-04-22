@@ -20,8 +20,6 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         self,
         file_path,
         file_name: str | None = None,
-        chunk_size: int | None = None,
-        chunk_overlap: int | None = None,
         agent_id: str | None = None,
         metadata: Dict[str, Any] | None = None,
     ) -> UploadSingleFileResponse:
@@ -32,8 +30,6 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         The CheshireCat processes the injection in background and the client will be informed at the end of the process.
         :param file_path: The path to the file to upload.
         :param file_name: The name of the file.
-        :param chunk_size: The size of the chunks to split the file into.
-        :param chunk_overlap: The overlap of the chunks.
         :param agent_id: The ID of the agent.
         :param metadata: The metadata to include with the file.
         :return: The response from the RabbitHole API.
@@ -41,10 +37,6 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         file_name = file_name or Path(file_path).name
 
         payload = MultipartPayload(data={})
-        if chunk_size is not None:
-            payload.data["chunk_size"] = chunk_size
-        if chunk_overlap is not None:
-            payload.data["chunk_overlap"] = chunk_overlap
         if metadata is not None:
             payload.data["metadata"] = json.dumps(metadata)
 
@@ -57,8 +49,6 @@ class RabbitHoleEndpoint(AbstractEndpoint):
     def post_files(
         self,
         file_paths: List[str],
-        chunk_size: int | None = None,
-        chunk_overlap: int | None = None,
         agent_id: str | None = None,
         metadata: Dict[str, Any] | None = None
     ) -> Dict[str, UploadSingleFileResponse]:
@@ -67,17 +57,11 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         ingested into the RAG system. The files are processed in a batch. The process is asynchronous.
         The CheshireCat processes the injection in background and the client will be informed at the end of the process.
         :param file_paths: The paths to the files to upload.
-        :param chunk_size: The size of the chunks to split the files into.
-        :param chunk_overlap: The overlap of the chunks.
         :param agent_id: The ID of the agent.
         :param metadata: The metadata to include with the files.
         :return: The response from the RabbitHole API.
         """
         data = {}
-        if chunk_size is not None:
-            data["chunk_size"] = chunk_size
-        if chunk_overlap is not None:
-            data["chunk_overlap"] = chunk_overlap
         if metadata is not None:
             data["metadata"] = json.dumps(metadata)
 
@@ -102,8 +86,6 @@ class RabbitHoleEndpoint(AbstractEndpoint):
     def post_web(
         self,
         web_url: str,
-        chunk_size: int | None = None,
-        chunk_overlap: int | None = None,
         agent_id: str | None = None,
         metadata: Dict[str, Any] | None = None
     ) -> UploadUrlResponse:
@@ -113,20 +95,11 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         The process is asynchronous.
         The CheshireCat processes the injection in background and the client will be informed at the end of the process.
         :param web_url: The URL of the website to ingest.
-        :param chunk_size: The size of the chunks to split the files into.
-        :param chunk_overlap: The overlap of the chunks.
         :param agent_id: The ID of the agent.
         :param metadata: The metadata to include with the files.
         :return: The response from the RabbitHole API.
         """
         payload = {"url": web_url}
-
-        if chunk_size is not None:
-            payload["chunk_size"] = chunk_size
-
-        if chunk_overlap is not None:
-            payload["chunk_overlap"] = chunk_overlap
-
         if metadata is not None:
             payload["metadata"] = metadata
 
