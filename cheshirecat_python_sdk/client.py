@@ -3,6 +3,7 @@ from cheshirecat_python_sdk.configuration import Configuration
 from cheshirecat_python_sdk.endpoints import (
     AdminsEndpoint,
     AuthHandlerEndpoint,
+    ChunkerEndpoint,
     EmbedderEndpoint,
     FileManagerEndpoint,
     LargeLanguageModelEndpoint,
@@ -53,6 +54,10 @@ class CheshireCatClient:
     @property
     def auth_handler(self):
         return AuthHandlerEndpoint(self)
+
+    @property
+    def chunker(self):
+        return ChunkerEndpoint(self)
 
     @property
     def embedder(self):

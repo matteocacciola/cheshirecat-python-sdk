@@ -1,5 +1,6 @@
 from cheshirecat_python_sdk.endpoints.admins import AdminsEndpoint
 from cheshirecat_python_sdk.endpoints.auth_handler import AuthHandlerEndpoint
+from cheshirecat_python_sdk.endpoints.chunker import ChunkerEndpoint
 from cheshirecat_python_sdk.endpoints.embedder import EmbedderEndpoint
 from cheshirecat_python_sdk.endpoints.file_manager import FileManagerEndpoint
 from cheshirecat_python_sdk.endpoints.large_language_model import LargeLanguageModelEndpoint
