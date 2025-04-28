@@ -46,9 +46,8 @@ class UsersEndpoint(AbstractEndpoint):
         This endpoint is used to create a new user in the system. The user is created with the specified username and
         password. The user is assigned the specified permissions. The permissions are used to define the access rights
         of the user in the system and are defined by the system administrator.
-        The endpoint can be used either for the
-        agent identified by the agentId parameter (for multi-agent installations) or for the default agent (for
-        single-agent installations).
+        The endpoint can be used either for the agent identified by the agentId parameter (for multi-agent installations)
+        or for the default agent (for single-agent installations).
         :param username: The username of the user to create
         :param password: The password of the user to create
         :param permissions: The permissions of the user to create (optional)

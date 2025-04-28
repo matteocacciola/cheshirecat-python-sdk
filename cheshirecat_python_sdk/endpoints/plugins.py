@@ -36,8 +36,7 @@ class PluginsEndpoint(AbstractEndpoint):
         return self.put(
             self.format_url(f"/toggle/{plugin_id}"),
             PluginToggleOutput,
-            {},
-            agent_id,
+            agent_id=agent_id,
         )
 
     def get_plugins_settings(self, agent_id: str | None = None) -> PluginsSettingsOutput:

@@ -48,7 +48,7 @@ class AbstractEndpoint(ABC):
     def post_json(
         self,
         endpoint: str,
-        output_class: Type[T],
+        output_class: Type[T] | None = None,
         payload: Dict[str, Any] | None = None,
         agent_id: str | None = None,
         user_id: str | None = None,
@@ -58,12 +58,14 @@ class AbstractEndpoint(ABC):
             options["json"] = payload
 
         response = self.get_http_client(agent_id, user_id).post(endpoint, **options)
+        if output_class is None:
+            return response.json()
         return deserialize(response.json(), output_class)
 
     def post_multipart(
         self,
         endpoint: str,
-        output_class: Type[T],
+        output_class: Type[T] | None = None,
         payload: MultipartPayload | None = None,
         agent_id: str | None = None,
         user_id: str | None = None,
@@ -75,23 +77,31 @@ class AbstractEndpoint(ABC):
             options["files"] = payload.files
 
         response = self.get_http_client(agent_id, user_id).post(endpoint, **options)
+        if output_class is None:
+            return response.json()
         return deserialize(response.json(), output_class)
 
     def put(
         self,
         endpoint: str,
-        output_class: Type[T],
-        payload: Dict[str, Any],
+        output_class: Type[T] | None = None,
+        payload: Dict[str, Any] | None = None,
         agent_id: str | None = None,
         user_id: str | None = None,
     ) -> T:
-        response = self.get_http_client(agent_id, user_id).put(endpoint, json=payload)
+        options = {}
+        if payload:
+            options["json"] = payload
+
+        response = self.get_http_client(agent_id, user_id).put(endpoint, **options)
+        if output_class is None:
+            return response.json()
         return deserialize(response.json(), output_class)
 
     def delete(
         self,
         endpoint: str,
-        output_class: Type[T],
+        output_class: Type[T] | None = None,
         agent_id: str | None = None,
         user_id: str | None = None,
         payload: Dict[str, Any] | None = None,
@@ -101,4 +111,6 @@ class AbstractEndpoint(ABC):
             options["json"] = payload
 
         response = self.get_http_client(agent_id, user_id).delete(endpoint, **options)
+        if output_class is None:
+            return response.json()
         return deserialize(response.json(), output_class)
