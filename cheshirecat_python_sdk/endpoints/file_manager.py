@@ -2,6 +2,7 @@ from typing import Dict, Any
 
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
 from cheshirecat_python_sdk.models.api.factories import FactoryObjectSettingOutput, FactoryObjectSettingsOutput
+from cheshirecat_python_sdk.models.api.file_managers import FileManagerAttributes
 
 
 class FileManagerEndpoint(AbstractEndpoint):
@@ -50,3 +51,11 @@ class FileManagerEndpoint(AbstractEndpoint):
             values,
             agent_id,
         )
+
+    def get_file_manager_attributes(self, agent_id: str | None = None) -> FileManagerAttributes:
+        """
+        Get the attributes of the file manager for the agent specified by agent_id
+        :param agent_id: The agent id
+        :return: FileManagerAttributes, the attributes of the file manager
+        """
+        return self.get(self.prefix, FileManagerAttributes, agent_id)
