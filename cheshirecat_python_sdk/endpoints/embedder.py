@@ -16,8 +16,8 @@ class EmbedderEndpoint(AbstractEndpoint):
         """
         return self.get(
             self.format_url("/settings"),
-            FactoryObjectSettingsOutput,
             self.system_id,
+            output_class=FactoryObjectSettingsOutput,
         )
 
     def get_embedder_settings(self, embedder: str) -> FactoryObjectSettingOutput:
@@ -28,8 +28,8 @@ class EmbedderEndpoint(AbstractEndpoint):
         """
         return self.get(
             self.format_url(f"/settings/{embedder}"),
-            FactoryObjectSettingOutput,
             self.system_id,
+            output_class=FactoryObjectSettingOutput,
         )
 
     def put_embedder_settings(self, embedder: str, values: Dict[str, Any]) -> FactoryObjectSettingOutput:
@@ -41,7 +41,7 @@ class EmbedderEndpoint(AbstractEndpoint):
         """
         return self.put(
             self.format_url(f"/settings/{embedder}"),
-            FactoryObjectSettingOutput,
-            values,
             self.system_id,
+            output_class=FactoryObjectSettingOutput,
+            payload=values,
         )

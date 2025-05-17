@@ -16,9 +16,7 @@ class UsersEndpoint(AbstractEndpoint):
         This endpoint is used to get a token for the user. The token is used to authenticate the user in the system. When
         the token expires, the user must request a new token.
         """
-        http_client = self.client.http_client.get_client()
-
-        response = http_client.post("/auth/token", json={
+        response = self.get_http_client().post("/auth/token", json={
             "username": username,
             "password": password,
         })
@@ -28,30 +26,27 @@ class UsersEndpoint(AbstractEndpoint):
 
         return result
 
-    def get_available_permissions(self, agent_id: str | None = None) -> dict[int | str, Any]:
+    def get_available_permissions(self, agent_id: str) -> dict[int | str, Any]:
         """
         This endpoint is used to get a list of available permissions in the system. The permissions are used to define
         the access rights of the users in the system. The permissions are defined by the system administrator.
-        The endpoint can be used either for the agent identified by the agentId parameter (for multi-agent installations)
-        or for the default agent (for single-agent installations).
-        :param agent_id: The id of the agent to get settings for (optional)
+        :param agent_id: The id of the agent to get settings for
         :return array<int|string, Any>, the available permissions
         """
-        return self.get("/auth/available-permissions", agent_id=agent_id)
+        return self.get("/auth/available-permissions", agent_id)
 
     def post_user(
-        self, username: str, password: str, permissions: dict[str, Any] | None = None, agent_id: str | None = None
+        self, agent_id: str, username: str, password: str, permissions: dict[str, Any] | None = None
     ) -> UserOutput:
         """
         This endpoint is used to create a new user in the system. The user is created with the specified username and
         password. The user is assigned the specified permissions. The permissions are used to define the access rights
         of the user in the system and are defined by the system administrator.
-        The endpoint can be used either for the agent identified by the agentId parameter (for multi-agent installations)
-        or for the default agent (for single-agent installations).
+        The endpoint can be used either for the agent identified by the agentId parameter.
+        :param agent_id: The id of the agent to create the user for
         :param username: The username of the user to create
         :param password: The password of the user to create
         :param permissions: The permissions of the user to create (optional)
-        :param agent_id: The id of the agent to create the user for (optional)
         :return UserOutput, the created user
         """
         payload = {
@@ -59,23 +54,22 @@ class UsersEndpoint(AbstractEndpoint):
             "password": password,
         }
         if permissions is not None:
-            payload["permissions"] = permissions
+            payload["permissions"] = permissions  # type: ignore
 
         return self.post_json(
             self.prefix,
-            UserOutput,
-            payload,
             agent_id,
+            output_class=UserOutput,
+            payload=payload,
         )
 
-    def get_users(self, agent_id: str | None = None) -> List[UserOutput]:
+    def get_users(self, agent_id: str) -> List[UserOutput]:
         """
         This endpoint is used to get a list of users in the system. The list includes the username and the permissions of
         each user. The permissions are used to define the access rights of the users in the system and are defined by the
         system administrator.
-        The endpoint can be used either for the agent identified by the agentId parameter (for multi-agent installations)
-        or for the default agent (for single-agent installations).
-        :param agent_id: The id of the agent to get users for (optional)
+        The endpoint can be used either for the agent identified by the agentId parameter.
+        :param agent_id: The id of the agent to get users for
         :return List[UserOutput], the users in the system with their permissions for the agent identified by agent_id
         """
         response = self.get_http_client(agent_id).get(self.prefix)
@@ -85,40 +79,38 @@ class UsersEndpoint(AbstractEndpoint):
             result.append(deserialize(item, UserOutput))
         return result
 
-    def get_user(self, user_id: str, agent_id: str | None = None) -> UserOutput:
+    def get_user(self, user_id: str, agent_id: str) -> UserOutput:
         """
         This endpoint is used to get a user in the system. The user is identified by the userId parameter, previously
         provided by the CheshireCat API when the user was created. The endpoint returns the username and the permissions
         of the user. The permissions are used to define the access rights of the user in the system and are defined by
         the system administrator.
-        The endpoint can be used either for the agent identified by the agentId parameter (for multi-agent installations)
-        or for the default agent (for single-agent installations).
+        The endpoint can be used either for the agent identified by the agentId parameter.
         :param user_id: The id of the user to get
-        :param agent_id: The id of the agent to get the user for (optional)
+        :param agent_id: The id of the agent to get the user for
         :return UserOutput, the user
         """
-        return self.get(self.format_url(user_id), UserOutput, agent_id)
+        return self.get(self.format_url(user_id), agent_id, output_class=UserOutput)
 
     def put_user(
         self,
         user_id: str,
+        agent_id: str,
         username: str | None = None,
         password: str | None = None,
         permissions: Dict[str, Any] | None = None,
-        agent_id: str | None = None
     ) -> UserOutput:
         """
         The endpoint is used to update the user in the system. The user is identified by the userId parameter, previously
         provided by the CheshireCat API when the user was created. The endpoint updates the username, the password, and
         the permissions of the user. The permissions are used to define the access rights of the user in the system and
         are defined by the system administrator.
-        The endpoint can be used either for the agent identified by the agentId parameter (for multi-agent installations)
-        or for the default agent (for single-agent installations).
+        The endpoint can be used either for the agent identified by the agentId parameter.
         :param user_id: The id of the user to update
+        :param agent_id: The id of the agent to update the user for
         :param username: The new username of the user (optional)
         :param password: The new password of the user (optional)
         :param permissions: The new permissions of the user (optional)
-        :param agent_id: The id of the agent to update the user for (optional)
         :return UserOutput, the updated user
         """
         payload = {}
@@ -129,16 +121,15 @@ class UsersEndpoint(AbstractEndpoint):
         if permissions is not None:
             payload["permissions"] = permissions
 
-        return self.put(self.format_url(user_id), UserOutput, payload, agent_id)
+        return self.put(self.format_url(user_id), agent_id, output_class=UserOutput, payload=payload)
 
-    def delete_user(self, user_id: str, agent_id: str | None = None) -> UserOutput:
+    def delete_user(self, user_id: str, agent_id: str) -> UserOutput:
         """
         This endpoint is used to delete the user in the system. The user is identified by the userId parameter, previously
         provided by the CheshireCat API when the user was created.
-        The endpoint can be used either for the agent identified by the agentId parameter (for multi-agent installations)
-        or for the default agent (for single-agent installations).
+        The endpoint can be used either for the agent identified by the agentId parameter.
         :param user_id: The id of the user to delete
-        :param agent_id: The id of the agent to delete the user for (optional)
+        :param agent_id: The id of the agent to delete the user for
         :return UserOutput, the deleted user
         """
-        return self.delete(self.format_url(user_id), UserOutput, agent_id)
+        return self.delete(self.format_url(user_id), agent_id, output_class=UserOutput)

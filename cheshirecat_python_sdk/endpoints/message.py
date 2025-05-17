@@ -8,29 +8,33 @@ from cheshirecat_python_sdk.utils import deserialize
 
 
 class MessageEndpoint(AbstractEndpoint):
-    def send_http_message(
-        self, message: Message, agent_id: str | None = None, user_id: str | None = None
-    ) -> MessageOutput:
+    def send_http_message(self, message: Message, agent_id: str, user_id: str) -> MessageOutput:
         """
         This endpoint sends a message to the agent identified by the agentId parameter. The message is sent via HTTP.
         :param message: Message object, the message to send
-        :param agent_id: the agent id, if None the message is sent to the default agent
-        :param user_id: the user id, if None the message is considered as sent by the default user
+        :param agent_id: the agent id
+        :param user_id: the user id
         """
-        return self.post_json('/message', MessageOutput, message.model_dump(), agent_id, user_id)
+        return self.post_json(
+            '/message',
+            agent_id,
+            output_class=MessageOutput,
+            payload=message.model_dump(),
+            user_id=user_id,
+        )
 
     async def send_websocket_message(
         self,
         message: Message,
-        agent_id: str | None = None,
-        user_id: str | None = None,
+        agent_id: str,
+        user_id: str,
         callback: Callable[[str], None] | None = None
     ) -> MessageOutput:
         """
         This endpoint sends a message to the agent identified by the agentId parameter. The message is sent via WebSocket.
         :param message: Message object, the message to send
-        :param agent_id: the agent id, if None the message is sent to the default agent
-        :param user_id: the user id, if None the message is considered as sent by the default user
+        :param agent_id: the agent id
+        :param user_id: the user id
         :param callback: callable, a callback function that will be called for each message received
         """
         try:

@@ -24,16 +24,16 @@ class AbstractEndpoint(ABC):
     def get_http_client(self, agent_id: str | None = None, user_id: str | None = None) -> requests.Session:
         return self.client.http_client.get_client(agent_id, user_id)
 
-    async def get_ws_client(self, agent_id: str | None = None, user_id: str | None = None) -> ClientConnection:
+    async def get_ws_client(self, agent_id: str, user_id: str) -> ClientConnection:
         return await self.client.ws_client.get_client(agent_id, user_id)
 
     def get(
         self,
         endpoint: str,
+        agent_id: str,
         output_class: Type[T] | None = None,
-        agent_id: str | None = None,
-        user_id: str | None = None,
         query: Dict[str, Any] | None = None,
+        user_id: str | None = None,
     ) -> T:
         options = {}
         if query:
@@ -48,9 +48,9 @@ class AbstractEndpoint(ABC):
     def post_json(
         self,
         endpoint: str,
+        agent_id: str,
         output_class: Type[T] | None = None,
         payload: Dict[str, Any] | None = None,
-        agent_id: str | None = None,
         user_id: str | None = None,
     ) -> T:
         options = {}
@@ -65,9 +65,9 @@ class AbstractEndpoint(ABC):
     def post_multipart(
         self,
         endpoint: str,
+        agent_id: str,
         output_class: Type[T] | None = None,
         payload: MultipartPayload | None = None,
-        agent_id: str | None = None,
         user_id: str | None = None,
     ) -> T:
         options = {}
@@ -84,9 +84,9 @@ class AbstractEndpoint(ABC):
     def put(
         self,
         endpoint: str,
+        agent_id: str,
         output_class: Type[T] | None = None,
         payload: Dict[str, Any] | None = None,
-        agent_id: str | None = None,
         user_id: str | None = None,
     ) -> T:
         options = {}
@@ -101,8 +101,8 @@ class AbstractEndpoint(ABC):
     def delete(
         self,
         endpoint: str,
+        agent_id: str,
         output_class: Type[T] | None = None,
-        agent_id: str | None = None,
         user_id: str | None = None,
         payload: Dict[str, Any] | None = None,
     ) -> T:

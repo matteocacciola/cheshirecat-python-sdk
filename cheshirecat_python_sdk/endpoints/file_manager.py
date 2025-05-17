@@ -10,7 +10,7 @@ class FileManagerEndpoint(AbstractEndpoint):
         super().__init__(client)
         self.prefix = "/file_manager"
 
-    def get_file_managers_settings(self, agent_id: str | None = None) -> FactoryObjectSettingsOutput:
+    def get_file_managers_settings(self, agent_id: str) -> FactoryObjectSettingsOutput:
         """
         Get all file managers settings for the agent specified by agent_id
         :param agent_id: The agent id
@@ -18,11 +18,11 @@ class FileManagerEndpoint(AbstractEndpoint):
         """
         return self.get(
             self.format_url("/settings"),
-            FactoryObjectSettingsOutput,
             agent_id,
+            output_class=FactoryObjectSettingsOutput,
         )
 
-    def get_file_manager_settings(self, file_manager: str, agent_id: str | None = None) -> FactoryObjectSettingOutput:
+    def get_file_manager_settings(self, file_manager: str, agent_id: str) -> FactoryObjectSettingOutput:
         """
         Get the settings of a file manager by name for the agent specified by agent_id
         :param file_manager: str, the name of the file manager
@@ -31,31 +31,31 @@ class FileManagerEndpoint(AbstractEndpoint):
         """
         return self.get(
             self.format_url(f"/settings/{file_manager}"),
-            FactoryObjectSettingOutput,
             agent_id,
+            output_class=FactoryObjectSettingOutput,
         )
 
     def put_file_manager_settings(
-        self, file_manager: str, values: Dict[str, Any], agent_id: str | None = None
+        self, file_manager: str, agent_id: str, values: Dict[str, Any]
     ) -> FactoryObjectSettingOutput:
         """
         Update the settings of a file manager by name with the given values, for the agent specified by agent_id
         :param file_manager: str, the name of the file manager
-        :param values: Dict[str, Any], the values to update
         :param agent_id: The agent id
+        :param values: Dict[str, Any], the values to update
         :return: FactoryObjectSettingOutput, the updated settings of the file manager
         """
         return self.put(
             self.format_url(f"/settings/{file_manager}"),
-            FactoryObjectSettingOutput,
-            values,
             agent_id,
+            output_class=FactoryObjectSettingOutput,
+            payload=values,
         )
 
-    def get_file_manager_attributes(self, agent_id: str | None = None) -> FileManagerAttributes:
+    def get_file_manager_attributes(self, agent_id: str) -> FileManagerAttributes:
         """
         Get the attributes of the file manager for the agent specified by agent_id
         :param agent_id: The agent id
         :return: FileManagerAttributes, the attributes of the file manager
         """
-        return self.get(self.prefix, FileManagerAttributes, agent_id)
+        return self.get(self.prefix, agent_id, output_class=FileManagerAttributes)

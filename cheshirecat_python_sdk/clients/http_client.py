@@ -53,7 +53,7 @@ class HttpClient:
         if not self.apikey and not self.token:
             raise ValueError("You must provide an apikey or a token")
 
-        self.agent_id = agent_id or "agent"
+        self.agent_id = agent_id
         self.user_id = user_id
 
         for middleware in self.middlewares:

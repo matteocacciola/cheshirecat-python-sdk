@@ -47,9 +47,9 @@ class AdminsEndpoint(AbstractEndpoint):
         """
         payload = {"username": username, "password": password}
         if permissions:
-            payload["permissions"] = permissions
+            payload["permissions"] = permissions  # type: ignore
 
-        return self.post_json(self.format_url("/users"), AdminOutput, payload, self.system_id)
+        return self.post_json(self.format_url("/users"), self.system_id, output_class=AdminOutput, payload=payload)
 
     def get_admins(self, limit: int | None = None, skip: int | None = None) -> List[AdminOutput]:
         """
@@ -76,7 +76,7 @@ class AdminsEndpoint(AbstractEndpoint):
         :param admin_id: The ID of the user.
         :return: AdminOutput, the details of the user.
         """
-        return self.get(self.format_url(f"/users/{admin_id}"), AdminOutput, self.system_id)
+        return self.get(self.format_url(f"/users/{admin_id}"), self.system_id, output_class=AdminOutput)
 
     def put_admin(
         self,
@@ -101,7 +101,7 @@ class AdminsEndpoint(AbstractEndpoint):
         if permissions:
             payload["permissions"] = permissions
 
-        return self.put(self.format_url(f"/users/{admin_id}"), AdminOutput, payload, self.system_id)
+        return self.put(self.format_url(f"/users/{admin_id}"), self.system_id, output_class=AdminOutput, payload=payload)
 
     def delete_admin(self, admin_id: str) -> AdminOutput:
         """
@@ -109,45 +109,45 @@ class AdminsEndpoint(AbstractEndpoint):
         :param admin_id: The ID of the user.
         :return: AdminOutput, the details of the user.
         """
-        return self.delete(self.format_url(f"/users/{admin_id}"), AdminOutput, self.system_id)
+        return self.delete(self.format_url(f"/users/{admin_id}"), self.system_id, output_class=AdminOutput)
 
     def post_factory_reset(self) -> ResetOutput:
         """
         Reset the system to the factory settings.
         :return: ResetOutput, the details of the reset.
         """
-        return self.post_json(self.format_url("/utils/factory/reset/"), ResetOutput, {}, self.system_id)
+        return self.post_json(self.format_url("/utils/factory/reset/"), self.system_id, output_class=ResetOutput)
 
     def get_agents(self) -> List[str]:
         """
         Get a list of all agents.
         :return: List[str], the IDs of the agents.
         """
-        return self.get(self.format_url("/utils/agents/"), None, agent_id=self.system_id)
+        return self.get(self.format_url("/utils/agents/"), self.system_id)
 
-    def post_agent_create(self, agent_id: str | None = None) -> CreatedOutput:
+    def post_agent_create(self, agent_id: str) -> CreatedOutput:
         """
         Create a new agent.
         :param agent_id: The ID of the agent.
         :return: CreatedOutput, the details of the agent.
         """
-        return self.post_json(self.format_url("/utils/agent/create/"), CreatedOutput, {}, agent_id)
+        return self.post_json(self.format_url("/utils/agent/create/"), agent_id, output_class=CreatedOutput)
 
-    def post_agent_reset(self, agent_id: str | None = None) -> ResetOutput:
+    def post_agent_reset(self, agent_id: str) -> ResetOutput:
         """
         Reset an agent to the factory settings.
         :param agent_id: The ID of the agent.
         :return: ResetOutput, the details of the reset.
         """
-        return self.post_json(self.format_url("/utils/agent/reset/"), ResetOutput, {}, agent_id)
+        return self.post_json(self.format_url("/utils/agent/reset/"), agent_id, output_class=ResetOutput)
 
-    def post_agent_destroy(self, agent_id: str | None = None) -> ResetOutput:
+    def post_agent_destroy(self, agent_id: str) -> ResetOutput:
         """
         Destroy an agent.
         :param agent_id: The ID of the agent.
         :return: ResetOutput, the details of the reset.
         """
-        return self.post_json(self.format_url("/utils/agent/destroy/"), ResetOutput, {}, agent_id)
+        return self.post_json(self.format_url("/utils/agent/destroy/"), agent_id, output_class=ResetOutput)
 
     def get_available_plugins(self, plugin_name: str | None = None) -> PluginCollectionOutput:
         """
@@ -157,8 +157,8 @@ class AdminsEndpoint(AbstractEndpoint):
         """
         return self.get(
             self.format_url("/plugins"),
-            PluginCollectionOutput,
             self.system_id,
+            output_class=PluginCollectionOutput,
             query={"query": plugin_name} if plugin_name else None,
         )
 
@@ -168,7 +168,10 @@ class AdminsEndpoint(AbstractEndpoint):
         with open(path_zip, "rb") as file:
             payload.files = [("file", file_attributes(path_zip, file))]
             result = self.post_multipart(
-                self.format_url("/plugins/upload"), PluginInstallOutput, payload, self.system_id
+                self.format_url("/plugins/upload"),
+                self.system_id,
+                output_class=PluginInstallOutput,
+                payload=payload,
             )
         return result
 
@@ -178,14 +181,19 @@ class AdminsEndpoint(AbstractEndpoint):
         :param url: The URL of the plugin.
         :return: PluginInstallFromRegistryOutput, the details of the installation.
         """
-        return self.post_json(self.format_url("/plugins/upload/registry"), PluginInstallFromRegistryOutput, {"url": url}, self.system_id)
+        return self.post_json(
+            self.format_url("/plugins/upload/registry"),
+            self.system_id,
+            output_class=PluginInstallFromRegistryOutput,
+            payload={"url": url},
+        )
 
     def get_plugins_settings(self) -> PluginsSettingsOutput:
         """
         Get the default settings of all the plugins.
         :return: PluginsSettingsOutput, the details of the settings.
         """
-        return self.get(self.format_url("/plugins/settings"), PluginsSettingsOutput, self.system_id)
+        return self.get(self.format_url("/plugins/settings"), self.system_id, output_class=PluginsSettingsOutput)
 
     def get_plugin_settings(self, plugin_id: str) -> PluginSettingsOutput:
         """
@@ -193,7 +201,9 @@ class AdminsEndpoint(AbstractEndpoint):
         :param plugin_id: The ID of the plugin.
         :return: PluginSettingsOutput, the details of the settings.
         """
-        return self.get(self.format_url(f"/plugins/settings/{plugin_id}"), PluginSettingsOutput, self.system_id)
+        return self.get(
+            self.format_url(f"/plugins/settings/{plugin_id}"), self.system_id, output_class=PluginSettingsOutput
+        )
 
     def get_plugin_details(self, plugin_id: str) -> PluginDetailsOutput:
         """
@@ -201,7 +211,7 @@ class AdminsEndpoint(AbstractEndpoint):
         :param plugin_id: The ID of the plugin.
         :return: PluginDetailsOutput, the details of the plugin.
         """
-        return self.get(self.format_url(f"/plugins/{plugin_id}"), PluginDetailsOutput, self.system_id)
+        return self.get(self.format_url(f"/plugins/{plugin_id}"), self.system_id, output_class=PluginDetailsOutput)
 
     def delete_plugin(self, plugin_id: str) -> PluginDeleteOutput:
         """
@@ -209,4 +219,4 @@ class AdminsEndpoint(AbstractEndpoint):
         :param plugin_id: The ID of the plugin.
         :return: PluginDeleteOutput, the details of the plugin.
         """
-        return self.delete(self.format_url(f"/plugins/{plugin_id}"), PluginDeleteOutput, self.system_id)
+        return self.delete(self.format_url(f"/plugins/{plugin_id}"), self.system_id, output_class=PluginDeleteOutput)

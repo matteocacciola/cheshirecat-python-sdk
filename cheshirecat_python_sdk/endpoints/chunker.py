@@ -9,7 +9,7 @@ class ChunkerEndpoint(AbstractEndpoint):
         super().__init__(client)
         self.prefix = "/chunking"
 
-    def get_chunkers_settings(self, agent_id: str | None = None) -> FactoryObjectSettingsOutput:
+    def get_chunkers_settings(self, agent_id: str) -> FactoryObjectSettingsOutput:
         """
         Get all chunker settings for the agent specified by agent_id
         :param agent_id: The agent id
@@ -17,11 +17,11 @@ class ChunkerEndpoint(AbstractEndpoint):
         """
         return self.get(
             self.format_url("/settings"),
-            FactoryObjectSettingsOutput,
             agent_id,
+            output_class=FactoryObjectSettingsOutput,
         )
 
-    def get_chunker_settings(self, chunker: str, agent_id: str | None = None) -> FactoryObjectSettingOutput:
+    def get_chunker_settings(self, chunker: str, agent_id: str) -> FactoryObjectSettingOutput:
         """
         Get the chunker settings for the chunker specified by chunker and agent_id
         :param chunker: The name of the chunker
@@ -30,23 +30,23 @@ class ChunkerEndpoint(AbstractEndpoint):
         """
         return self.get(
             self.format_url(f"/settings/{chunker}"),
-            FactoryObjectSettingOutput,
             agent_id,
+            output_class=FactoryObjectSettingOutput,
         )
 
     def put_chunker_settings(
-        self, chunker: str, values: Dict[str, Any], agent_id: str | None = None
+        self, chunker: str, agent_id: str, values: Dict[str, Any]
     ) -> FactoryObjectSettingOutput:
         """
         Update the chunker settings for the chunker specified by chunker and agent_id
         :param chunker: The name of the chunker
-        :param values: The new settings
         :param agent_id: The agent id
+        :param values: The new settings
         :return: FactoryObjectSettingOutput, the updated chunker settings
         """
         return self.put(
             self.format_url(f"/settings/{chunker}"),
-            FactoryObjectSettingOutput,
-            values,
             agent_id,
+            output_class=FactoryObjectSettingOutput,
+            payload=values,
         )

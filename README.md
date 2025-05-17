@@ -38,8 +38,10 @@ notification_closure = lambda message: None # handle websocket notification, lik
 
 # result is the result of the message
 result = cheshire_cat_client.message.send_websocket_message(
-    Message("Hello world!", 'user', []),  # message body
-    notification_closure # websocket notification closure handle
+    Message(text="Hello world!"),  # message body
+    "agent", # agent ID
+    "user", # user ID
+    callback=notification_closure # websocket notification closure handle
 )
 ```
 
@@ -54,11 +56,11 @@ cheshire_cat_client = CheshireCatClient(configuration)
 
 # file
 file = "path/to/file"
-result = asyncio.run(cheshire_cat_client.rabbit_hole.post_file(file))
+result = asyncio.run(cheshire_cat_client.rabbit_hole.post_file(file, "agent"))
 
 # url
 url = "https://www.google.com"
-result = asyncio.run(cheshire_cat_client.rabbit_hole.post_web(url))
+result = asyncio.run(cheshire_cat_client.rabbit_hole.post_web(url, "agent"))
 ```
 
 Memory management utilities:
@@ -69,11 +71,11 @@ from cheshirecat_python_sdk import Collection, CheshireCatClient, Configuration,
 configuration = Configuration(host="localhost", port=1865, auth_key="test", secure_connection=False)
 cheshire_cat_client = CheshireCatClient(configuration)
 
-cheshire_cat_client.memory.get_memory_collections()  # get number of vectors in the working memory
-cheshire_cat_client.memory.get_memory_recall("HELLO")  # recall memories by text
+cheshire_cat_client.memory.get_memory_collections("agent")  # get number of vectors in the working memory
+cheshire_cat_client.memory.get_memory_recall("HELLO", "agent", "user")  # recall memories by text
 
 url = "https://www.google.com"
 
 # delete memory points by metadata, like this example delete by source
-cheshire_cat_client.memory.delete_memory_points_by_metadata(Collection.DECLARATIVE, {"source": url})
+cheshire_cat_client.memory.delete_memory_points_by_metadata(Collection.DECLARATIVE, "agent", {"source": url})
 ```

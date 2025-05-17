@@ -22,8 +22,8 @@ class WSClient:
         self.token = token
         return self
 
-    def get_ws_uri(self, agent_id: str | None = None, user_id: str | None = None) -> str:
-        query = {}
+    def get_ws_uri(self, agent_id: str, user_id: str) -> str:
+        query = {"user_id": user_id}
         if self.token:
             query["token"] = self.token
         elif self.apikey:
@@ -31,17 +31,14 @@ class WSClient:
         else:
             raise ValueError("You must provide an apikey or a token")
 
-        if user_id:
-            query["user_id"] = user_id
-
         scheme = "wss" if self.is_wss else "ws"
-        path = f"ws/{agent_id}" if agent_id else "ws"
+        path = f"ws/{agent_id}"
         query_string = urlencode(query)
         port_suffix = f":{self.port}" if self.port else ""
 
         return f"{scheme}://{self.host}{port_suffix}/{path}?{query_string}"
 
-    async def get_client(self, agent_id: str | None = None, user_id: str | None = None) -> ClientConnection:
+    async def get_client(self, agent_id: str, user_id: str) -> ClientConnection:
         uri = self.get_ws_uri(agent_id, user_id)
         if self.ws_client is None:
             try:

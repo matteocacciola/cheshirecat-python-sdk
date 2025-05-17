@@ -19,8 +19,8 @@ class RabbitHoleEndpoint(AbstractEndpoint):
     def post_file(
         self,
         file_path,
+        agent_id: str,
         file_name: str | None = None,
-        agent_id: str | None = None,
         metadata: Dict[str, Any] | None = None,
     ) -> UploadSingleFileResponse:
         """
@@ -29,8 +29,8 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         The process is asynchronous and the results are returned in a batch.
         The CheshireCat processes the injection in background and the client will be informed at the end of the process.
         :param file_path: The path to the file to upload.
-        :param file_name: The name of the file.
         :param agent_id: The ID of the agent.
+        :param file_name: The name of the file.
         :param metadata: The metadata to include with the file.
         :return: The response from the RabbitHole API.
         """
@@ -42,16 +42,16 @@ class RabbitHoleEndpoint(AbstractEndpoint):
 
         with open(file_path, "rb") as file:
             payload.files = [("file", file_attributes(file_name, file))]
-            result = self.post_multipart(self.prefix, UploadSingleFileResponse, payload, agent_id)
+            result = self.post_multipart(self.prefix, agent_id, output_class=UploadSingleFileResponse, payload=payload)
 
         return result
 
     def post_files(
         self,
         file_paths: List[str],
-        agent_id: str | None = None,
+        agent_id: str,
         metadata: Dict[str, Any] | None = None
-    ) -> Dict[str, UploadSingleFileResponse]:
+    ) -> Dict[str, UploadSingleFileResponse]:  # type: ignore
         """
         Posts multiple files to the RabbitHole API. The files are uploaded to the RabbitHole server and
         ingested into the RAG system. The files are processed in a batch. The process is asynchronous.
@@ -86,14 +86,14 @@ class RabbitHoleEndpoint(AbstractEndpoint):
     def post_web(
         self,
         web_url: str,
-        agent_id: str | None = None,
+        agent_id: str,
         metadata: Dict[str, Any] | None = None
     ) -> UploadUrlResponse:
         """
         Posts a web URL to the RabbitHole API. The web URL is ingested into the RAG system. The web URL is
-        processed by the RAG system by Web scraping and the results are stored in the RAG database.
+        processed by the RAG system by Web scraping, and the results are stored in the RAG database.
         The process is asynchronous.
-        The CheshireCat processes the injection in background and the client will be informed at the end of the process.
+        The CheshireCat processes the injection in background, and the client will be informed at the end of the process.
         :param web_url: The URL of the website to ingest.
         :param agent_id: The ID of the agent.
         :param metadata: The metadata to include with the files.
@@ -101,24 +101,24 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         """
         payload = {"url": web_url}
         if metadata is not None:
-            payload["metadata"] = metadata
+            payload["metadata"] = metadata  # type: ignore
 
-        return self.post_json(f"{self.prefix}/web", UploadUrlResponse, payload, agent_id)
+        return self.post_json(f"{self.prefix}/web", agent_id, output_class=UploadUrlResponse, payload=payload)
 
     def post_memory(
         self,
         file_path: str,
+        agent_id: str,
         file_name: str | None = None,
-        agent_id: str | None = None
     ) -> UploadSingleFileResponse:
         """
-        Posts a memory point, either for the agent identified by the agent_id parameter (for multi-agent
-        installations) or for the default agent (for single-agent installations). The memory point is ingested into the
-        RAG system. The process is asynchronous. The provided file must be in JSON format.
-        The CheshireCat processes the injection in background and the client will be informed at the end of the process.
+        Posts a memory point, either for the agent identified by the agent_id parameter.
+        The memory point is ingested into the RAG system. The process is asynchronous. The provided file must be in JSON
+        format. The CheshireCat processes the injection in the background, and the client will be informed at the end of
+        the process.
         :param file_path: The path to the file to upload.
-        :param file_name: The name of the file.
         :param agent_id: The ID of the agent.
+        :param file_name: The name of the file (optional).
         :return: The response from the RabbitHole API.
         """
         file_name = file_name or Path(file_path).name
@@ -126,18 +126,21 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         payload = MultipartPayload()
         with open(file_path, "rb") as file:
             payload.files = [("file", file_attributes(file_name, file))]
-            result = self.post_multipart(f"{self.prefix}/memory", UploadSingleFileResponse, payload, agent_id)
+            result = self.post_multipart(
+                f"{self.prefix}/memory", agent_id, output_class=UploadSingleFileResponse, payload=payload
+            )
 
         return result
 
-    def get_allowed_mime_types(self, agent_id: str | None = None) -> AllowedMimeTypesOutput:
+    def get_allowed_mime_types(self, agent_id: str) -> AllowedMimeTypesOutput:
         """
         Retrieves the allowed MIME types for the RabbitHole API. The allowed MIME types are the MIME types
         that are allowed to be uploaded to the RabbitHole API. The allowed MIME types are returned in a list.
-        If the agent_id parameter is provided, the allowed MIME types are retrieved for the agent identified by the
-        agent_id parameter (for multi-agent installations). If the agent_id parameter is not provided, the allowed MIME
-        types are retrieved for the default agent (for single-agent installations).
         :param agent_id: The ID of the agent.
         :return: AllowedMimeTypesOutput, the details of the allowed MIME types.
         """
-        return self.get(f"{self.prefix}/allowed-mimetypes", AllowedMimeTypesOutput, agent_id)
+        return self.get(
+            f"{self.prefix}/allowed-mimetypes",
+            agent_id,
+            output_class=AllowedMimeTypesOutput
+        )
