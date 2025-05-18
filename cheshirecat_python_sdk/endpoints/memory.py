@@ -68,8 +68,7 @@ class MemoryEndpoint(AbstractEndpoint):
 
     def get_conversation_history(self, agent_id: str, user_id: str) -> ConversationHistoryOutput:
         """
-        This endpoint returns the conversation history. If the user_id parameter is provided, the conversation history
-        is filtered by the user ID.
+        This endpoint returns the conversation history.
         :param agent_id: The agent ID.
         :param user_id: The user ID to filter the conversation history.
         :return: ConversationHistoryOutput, a list of conversation history entries.
@@ -83,8 +82,7 @@ class MemoryEndpoint(AbstractEndpoint):
 
     def delete_conversation_history(self, agent_id: str, user_id: str) -> ConversationHistoryDeleteOutput:
         """
-        This endpoint deletes the conversation history. If the user_id parameter is provided, the conversation history
-        is filtered by the user ID.
+        This endpoint deletes the conversation history.
         :param agent_id: The agent ID.
         :param user_id: The user ID to filter the conversation history.
         :return: ConversationHistoryDeleteOutput, a message indicating the number of conversation history entries deleted.
@@ -106,8 +104,7 @@ class MemoryEndpoint(AbstractEndpoint):
         why: Why | None = None,
     ) -> ConversationHistoryOutput:
         """
-        This endpoint creates a new element in the conversation history. If the user_id parameter is provided, the
-        conversation history is added to the user ID.
+        This endpoint creates a new element in the conversation history.
         :param who: The role of the user in the conversation.
         :param text: The text of the conversation history entry.
         :param agent_id: The agent ID.
@@ -148,7 +145,6 @@ class MemoryEndpoint(AbstractEndpoint):
         """
         This endpoint retrieves memory points based on the input text. The text parameter is the input text for which
         the memory points are retrieved. The k parameter is the number of memory points to retrieve.
-        If the user_id parameter is provided, the memory points are filtered by the user ID.
         :param text: The input text for which the memory points are retrieved.
         :param agent_id: The agent ID.
         :param user_id: The user ID to filter the memory points.
@@ -179,7 +175,6 @@ class MemoryEndpoint(AbstractEndpoint):
     ) -> MemoryPointOutput:
         """
         This method posts a memory point.
-        If the user_id parameter is provided, the memory point is associated with the user ID.
         :param collection: The collection to post the memory point.
         :param agent_id: The agent ID.
         :param user_id: The user ID to associate with the memory point.
@@ -208,7 +203,6 @@ class MemoryEndpoint(AbstractEndpoint):
     ) -> MemoryPointOutput:
         """
         This method puts a memory point, either for the agent identified by the agent_id parameter.
-        If the user_id parameter is provided, the memory point is associated with the user ID.
         :param collection: The collection to put the memory point.
         :param agent_id: The agent ID.
         :param user_id: The user ID to associate with the memory point.
