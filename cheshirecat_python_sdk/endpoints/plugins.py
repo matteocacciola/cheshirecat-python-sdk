@@ -24,7 +24,7 @@ class PluginsEndpoint(AbstractEndpoint):
 
     def put_toggle_plugin(self, plugin_id: str, agent_id: str) -> PluginToggleOutput:
         """
-        This endpoint toggles a plugin, either for the agent identified by the agent_id parameter.
+        This endpoint toggles a plugin, for the agent identified by the agent_id parameter.
         :param plugin_id: The id of the plugin to toggle
         :param agent_id: The id of the agent
         :return: PluginToggleOutput, the toggled plugin

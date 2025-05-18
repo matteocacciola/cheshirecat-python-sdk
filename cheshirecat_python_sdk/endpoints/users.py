@@ -42,7 +42,7 @@ class UsersEndpoint(AbstractEndpoint):
         This endpoint is used to create a new user in the system. The user is created with the specified username and
         password. The user is assigned the specified permissions. The permissions are used to define the access rights
         of the user in the system and are defined by the system administrator.
-        The endpoint can be used either for the agent identified by the agentId parameter.
+        The endpoint can be used for the agent identified by the agentId parameter.
         :param agent_id: The id of the agent to create the user for
         :param username: The username of the user to create
         :param password: The password of the user to create
@@ -68,7 +68,7 @@ class UsersEndpoint(AbstractEndpoint):
         This endpoint is used to get a list of users in the system. The list includes the username and the permissions of
         each user. The permissions are used to define the access rights of the users in the system and are defined by the
         system administrator.
-        The endpoint can be used either for the agent identified by the agentId parameter.
+        The endpoint can be used for the agent identified by the agentId parameter.
         :param agent_id: The id of the agent to get users for
         :return List[UserOutput], the users in the system with their permissions for the agent identified by agent_id
         """
@@ -85,7 +85,7 @@ class UsersEndpoint(AbstractEndpoint):
         provided by the CheshireCat API when the user was created. The endpoint returns the username and the permissions
         of the user. The permissions are used to define the access rights of the user in the system and are defined by
         the system administrator.
-        The endpoint can be used either for the agent identified by the agentId parameter.
+        The endpoint can be used for the agent identified by the agentId parameter.
         :param user_id: The id of the user to get
         :param agent_id: The id of the agent to get the user for
         :return UserOutput, the user
@@ -105,7 +105,7 @@ class UsersEndpoint(AbstractEndpoint):
         provided by the CheshireCat API when the user was created. The endpoint updates the username, the password, and
         the permissions of the user. The permissions are used to define the access rights of the user in the system and
         are defined by the system administrator.
-        The endpoint can be used either for the agent identified by the agentId parameter.
+        The endpoint can be used for the agent identified by the agentId parameter.
         :param user_id: The id of the user to update
         :param agent_id: The id of the agent to update the user for
         :param username: The new username of the user (optional)
@@ -127,7 +127,7 @@ class UsersEndpoint(AbstractEndpoint):
         """
         This endpoint is used to delete the user in the system. The user is identified by the userId parameter, previously
         provided by the CheshireCat API when the user was created.
-        The endpoint can be used either for the agent identified by the agentId parameter.
+        The endpoint can be used for the agent identified by the agentId parameter.
         :param user_id: The id of the user to delete
         :param agent_id: The id of the agent to delete the user for
         :return UserOutput, the deleted user

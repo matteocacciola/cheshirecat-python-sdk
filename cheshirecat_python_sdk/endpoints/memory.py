@@ -202,7 +202,7 @@ class MemoryEndpoint(AbstractEndpoint):
         point_id: str,
     ) -> MemoryPointOutput:
         """
-        This method puts a memory point, either for the agent identified by the agent_id parameter.
+        This method puts a memory point, for the agent identified by the agent_id parameter.
         :param collection: The collection to put the memory point.
         :param agent_id: The agent ID.
         :param user_id: The user ID to associate with the memory point.

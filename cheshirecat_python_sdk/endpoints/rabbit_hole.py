@@ -112,7 +112,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         file_name: str | None = None,
     ) -> UploadSingleFileResponse:
         """
-        Posts a memory point, either for the agent identified by the agent_id parameter.
+        Posts a memory point, for the agent identified by the agent_id parameter.
         The memory point is ingested into the RAG system. The process is asynchronous. The provided file must be in JSON
         format. The CheshireCat processes the injection in the background, and the client will be informed at the end of
         the process.
