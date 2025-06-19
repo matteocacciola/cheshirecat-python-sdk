@@ -103,7 +103,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         if metadata is not None:
             payload["metadata"] = metadata  # type: ignore
 
-        return self.post_json(f"{self.prefix}/web", agent_id, output_class=UploadUrlResponse, payload=payload)
+        return self.post_json(self.format_url("/web"), agent_id, output_class=UploadUrlResponse, payload=payload)
 
     def post_memory(
         self,
@@ -127,7 +127,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         with open(file_path, "rb") as file:
             payload.files = [("file", file_attributes(file_name, file))]
             result = self.post_multipart(
-                f"{self.prefix}/memory", agent_id, output_class=UploadSingleFileResponse, payload=payload
+                self.format_url("/memory"), agent_id, output_class=UploadSingleFileResponse, payload=payload
             )
 
         return result
@@ -140,7 +140,19 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         :return: AllowedMimeTypesOutput, the details of the allowed MIME types.
         """
         return self.get(
-            f"{self.prefix}/allowed-mimetypes",
+            self.format_url("/allowed-mimetypes"),
             agent_id,
             output_class=AllowedMimeTypesOutput
+        )
+
+    def get_web_sources(self, agent_id: str) -> List[str]:
+        """
+        This method retrieves the web sources for the RabbitHole API. The web sources are the web URLs that are allowed
+        to be uploaded to the RabbitHole API. The web sources are returned in a list.
+        :param agent_id: The ID of the agent.
+        :return: List[str]
+        """
+        return self.get(
+            self.format_url("/web"),
+            agent_id,
         )
