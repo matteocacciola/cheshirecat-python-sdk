@@ -19,6 +19,7 @@ class CollectionPointsDestroyOutput(BaseModel):
 class CollectionsOutput(BaseModel):
     collections: List[CollectionsItem]
 
+
 class ConversationHistoryDeleteOutput(BaseModel):
     deleted: bool
 
