@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Any
 from pydantic import BaseModel
 
 from cheshirecat_python_sdk.models.api.nested.memories import (
