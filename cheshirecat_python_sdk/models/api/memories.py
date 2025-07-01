@@ -33,7 +33,7 @@ class MemoryPointDeleteOutput(BaseModel):
 
 class MemoryPointOutput(MemoryPoint):
     id: str
-    vector: List[float]
+    vector: List[float] | List[List[float]] | Dict[str, Any]
 
 
 class MemoryPointsDeleteByMetadataOutput(BaseModel):

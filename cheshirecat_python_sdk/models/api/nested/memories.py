@@ -26,7 +26,7 @@ class MemoryPointsDeleteByMetadataInfo(BaseModel):
 
 class MemoryRecallQuery(BaseModel):
     text: str
-    vector: List[float]
+    vector: List[float] | List[List[float]] | Dict[str, Any]
 
 
 class MemoryRecallVectors(BaseModel):
