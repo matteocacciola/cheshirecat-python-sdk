@@ -38,5 +38,5 @@ class Record(BaseModel):
     id: str
     payload: Dict[str, Any] | None = None
     vector: List[float] | List[List[float]] | Dict[str, Any] | None = None
-    shard_key: str | None = None
-    order_value: float | None = None
+    shard_key: int | str | None = None
+    order_value: int | float | None = None
