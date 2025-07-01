@@ -37,6 +37,6 @@ class MemoryRecallVectors(BaseModel):
 class Record(BaseModel):
     id: str
     payload: Dict[str, Any] | None = None
-    vector: List[float] | None = None
+    vector: List[float] | List[List[float]] | Dict[str, Any] | None = None
     shard_key: str | None = None
     order_value: float | None = None
