@@ -26,14 +26,14 @@ class UsersEndpoint(AbstractEndpoint):
 
         return result
 
-    def get_available_permissions(self, agent_id: str) -> dict[int | str, Any]:
+    def get_available_permissions(self) -> dict[int | str, Any]:
         """
         This endpoint is used to get a list of available permissions in the system. The permissions are used to define
         the access rights of the users in the system. The permissions are defined by the system administrator.
-        :param agent_id: The id of the agent to get settings for
         :return array<int|string, Any>, the available permissions
         """
-        return self.get("/auth/available-permissions", agent_id)
+        response = self.get_http_client().get("/auth/available-permissions")
+        return response.json()
 
     def post_user(
         self, agent_id: str, username: str, password: str, permissions: dict[str, Any] | None = None

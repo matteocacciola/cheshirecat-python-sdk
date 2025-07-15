@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint, MultipartPayload
 from cheshirecat_python_sdk.models.api.admins import (
@@ -36,6 +36,15 @@ class AdminsEndpoint(AbstractEndpoint):
         result = deserialize(response.json(), TokenOutput)
         self.client.add_token(result.access_token)
         return result
+
+    def get_available_permissions(self) -> dict[int | str, Any]:
+        """
+        This endpoint is used to get a list of available permissions in the system. The permissions are used to define
+        the access rights of the users in the system. The permissions are defined by the system administrator.
+        :return array<int|string, Any>, the available permissions
+        """
+        response = self.get_http_client().get(self.format_url("/auth/available-permissions"))
+        return response.json()
 
     def post_admin(self, username: str, password: str, permissions: dict | None = None) -> AdminOutput:
         """
