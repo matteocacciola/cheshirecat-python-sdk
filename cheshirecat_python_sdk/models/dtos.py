@@ -26,7 +26,7 @@ class MessageBase(BaseModel):
 
 
 class Message(MessageBase):
-    additional_fields: Dict[str, Any] | None = None
+    metadata: Dict[str, Any] | None = None
 
 
 class SettingInput(BaseModel):
