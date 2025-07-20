@@ -31,13 +31,13 @@ class EndpointOutput(BaseModel):
 class PluginItemOutput(BaseModel):
     id: str
     name: str
-    description: str
-    author_name: str
-    author_url: str
-    plugin_url: str
-    tags: str
-    thumb: str
-    version: str
+    description: str | None = None
+    author_name: str | None = None
+    author_url: str | None = None
+    plugin_url: str | None = None
+    tags: str | None = None
+    thumb: str | None = None
+    version: str | None = None
     active: bool
     hooks: List[HookOutput]
     tools: List[ToolOutput]
@@ -52,16 +52,16 @@ class PluginCollectionOutput(BaseModel):
 
 
 class PluginItemRegistryOutput(BaseModel):
-    id: str
+    id: str | None = None
     name: str
-    description: str
-    author_name: str
-    author_url: str
-    plugin_url: str
-    tags: str
-    thumb: str
-    version: str
-    url: str
+    description: str | None = None
+    author_name: str | None = None
+    author_url: str | None = None
+    plugin_url: str | None = None
+    tags: str | None = None
+    thumb: str | None = None
+    version: str | None = None
+    url: str | None = None
 
 
 class PluginsSettingsOutput(BaseModel):
