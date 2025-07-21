@@ -1,4 +1,5 @@
 from typing import Dict, Any
+from requests import Response
 
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
 from cheshirecat_python_sdk.models.api.factories import FactoryObjectSettingOutput, FactoryObjectSettingsOutput
@@ -59,3 +60,16 @@ class FileManagerEndpoint(AbstractEndpoint):
         :return: FileManagerAttributes, the attributes of the file manager
         """
         return self.get(self.prefix, agent_id, output_class=FileManagerAttributes)
+
+    def get_file(self, agent_id: str, file_path: str) -> Response:
+        """
+        Download a file from the file manager for the agent specified by agent_id
+        :param agent_id: The agent id
+        :param file_path: The path of the file to download
+        :return: Response, the response containing the file content
+        """
+        return self.get_http_client(agent_id).get(
+            self.format_url(f"/download/{file_path}"),
+            stream=True,
+            headers={"Accept": "application/octet-stream"}
+        )
