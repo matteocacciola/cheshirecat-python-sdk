@@ -10,9 +10,9 @@ class AgentOutput(BaseModel):
 
 
 class Memory(BaseModel):
-    episodic: Dict[str, Any] | None = Field(default_factory=dict)
-    declarative: Dict[str, Any] | None = Field(default_factory=dict)
-    procedural: Dict[str, Any] | None = Field(default_factory=dict)
+    episodic: List | None = Field(default_factory=list)
+    declarative: List | None = Field(default_factory=list)
+    procedural: List | None = Field(default_factory=list)
 
 
 class MemoryPoint(BaseModel):
@@ -37,6 +37,6 @@ class SettingInput(BaseModel):
 
 class Why(BaseModel):
     input: str | None = None
-    intermediate_steps: Dict[str, Any] | None = Field(default_factory=dict)
+    intermediate_steps: List | None = Field(default_factory=list)
     memory: Memory = Field(default_factory=Memory)
-    model_interactions: Dict[str, Any] | None = Field(default_factory=dict)
+    model_interactions: List | None = Field(default_factory=list)

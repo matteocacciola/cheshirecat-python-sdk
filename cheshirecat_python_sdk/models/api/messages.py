@@ -4,7 +4,7 @@ from cheshirecat_python_sdk.models.dtos import MessageBase, Why
 
 
 class MessageOutput(MessageBase):
-    why: Why = Field(default_factory=Why)  # Assuming Why has a no-args constructor
+    why: Why | None = Field(default_factory=Why)  # Assuming Why has a no-args constructor
     type: str | None = "chat"  # Default argument
     error: bool | None = False  # Default argument
     content: str = Field(init=False)  # Field without a default value
