@@ -1,4 +1,5 @@
 from typing import Dict, Any
+import json
 
 from cheshirecat_python_sdk.enums import Collection, Role
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
@@ -156,7 +157,7 @@ class MemoryEndpoint(AbstractEndpoint):
         if k:
             query["k"] = k  # type: ignore
         if metadata:
-            query["metadata"] = metadata  # type: ignore
+            query["metadata"] = json.dumps(metadata)  # type: ignore
 
         return self.get(
             self.format_url("/recall"),
@@ -286,7 +287,7 @@ class MemoryEndpoint(AbstractEndpoint):
         if offset is not None:
             query["offset"] = offset
         if metadata:
-            query["metadata"] = metadata  # type: ignore
+            query["metadata"] = json.dumps(metadata)  # type: ignore
 
         return self.get(
             self.format_url(f"/collections/{collection}/points"),
