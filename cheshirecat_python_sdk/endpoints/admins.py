@@ -33,6 +33,8 @@ class AdminsEndpoint(AbstractEndpoint):
             self.format_url("/auth/token"),
             json={"username": username, "password": password},
         )
+        response.raise_for_status()
+
         result = deserialize(response.json(), TokenOutput)
         self.client.add_token(result.access_token)
         return result
@@ -44,6 +46,8 @@ class AdminsEndpoint(AbstractEndpoint):
         :return array<int|string, Any>, the available permissions
         """
         response = self.get_http_client().get(self.format_url("/auth/available-permissions"))
+        response.raise_for_status()
+
         return response.json()
 
     def post_admin(self, username: str, password: str, permissions: dict | None = None) -> AdminOutput:
@@ -74,6 +78,8 @@ class AdminsEndpoint(AbstractEndpoint):
             query["skip"] = skip
 
         response = self.get_http_client(self.system_id).get(self.format_url("/users"), params=query)
+        response.raise_for_status()
+
         result = []
         for item in response.json():
             result.append(deserialize(item, AdminOutput))

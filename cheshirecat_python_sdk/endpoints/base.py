@@ -40,6 +40,7 @@ class AbstractEndpoint(ABC):
             options["params"] = query
 
         response = self.get_http_client(agent_id, user_id).get(endpoint, **options)
+        response.raise_for_status()
 
         if output_class is None:
             return response.json()
@@ -58,6 +59,8 @@ class AbstractEndpoint(ABC):
             options["json"] = payload
 
         response = self.get_http_client(agent_id, user_id).post(endpoint, **options)
+        response.raise_for_status()
+
         if output_class is None:
             return response.json()
         return deserialize(response.json(), output_class)
@@ -77,6 +80,8 @@ class AbstractEndpoint(ABC):
             options["files"] = payload.files
 
         response = self.get_http_client(agent_id, user_id).post(endpoint, **options)
+        response.raise_for_status()
+
         if output_class is None:
             return response.json()
         return deserialize(response.json(), output_class)
@@ -94,6 +99,8 @@ class AbstractEndpoint(ABC):
             options["json"] = payload
 
         response = self.get_http_client(agent_id, user_id).put(endpoint, **options)
+        response.raise_for_status()
+
         if output_class is None:
             return response.json()
         return deserialize(response.json(), output_class)
@@ -111,6 +118,8 @@ class AbstractEndpoint(ABC):
             options["json"] = payload
 
         response = self.get_http_client(agent_id, user_id).delete(endpoint, **options)
+        response.raise_for_status()
+
         if output_class is None:
             return response.json()
         return deserialize(response.json(), output_class)

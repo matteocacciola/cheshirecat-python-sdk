@@ -20,6 +20,7 @@ class UsersEndpoint(AbstractEndpoint):
             "username": username,
             "password": password,
         })
+        response.raise_for_status()
 
         result = deserialize(response.json(), TokenOutput)
         self.client.add_token(result.access_token)
@@ -33,6 +34,8 @@ class UsersEndpoint(AbstractEndpoint):
         :return array<int|string, Any>, the available permissions
         """
         response = self.get_http_client().get("/auth/available-permissions")
+        response.raise_for_status()
+
         return response.json()
 
     def post_user(
@@ -73,6 +76,7 @@ class UsersEndpoint(AbstractEndpoint):
         :return List[UserOutput], the users in the system with their permissions for the agent identified by agent_id
         """
         response = self.get_http_client(agent_id).get(self.prefix)
+        response.raise_for_status()
 
         result = []
         for item in response.json():

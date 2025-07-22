@@ -74,6 +74,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
                 files.append(("files", file_attributes(Path(file_path).name, file)))
 
             response = self.get_http_client(agent_id).post(self.format_url("/batch"), data=data, files=files)
+            response.raise_for_status()
 
             result = {}
             for key, item in response.json().items():

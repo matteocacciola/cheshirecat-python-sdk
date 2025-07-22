@@ -68,8 +68,11 @@ class FileManagerEndpoint(AbstractEndpoint):
         :param file_path: The path of the file to download
         :return: Response, the response containing the file content
         """
-        return self.get_http_client(agent_id).get(
+        response = self.get_http_client(agent_id).get(
             self.format_url(f"/download/{file_path}"),
             stream=True,
             headers={"Accept": "application/octet-stream"}
         )
+        response.raise_for_status()
+
+        return response
