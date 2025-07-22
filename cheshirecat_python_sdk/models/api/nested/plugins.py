@@ -4,8 +4,8 @@ from pydantic import BaseModel
 
 class PropertySettingsOutput(BaseModel):
     default: Any
-    title: str
-    type: str
+    title: str | None = None
+    type: str | None = None
     extra: Dict[str, Any] | None = None
 
 
