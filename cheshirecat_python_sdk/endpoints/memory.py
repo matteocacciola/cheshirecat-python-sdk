@@ -268,6 +268,7 @@ class MemoryEndpoint(AbstractEndpoint):
         agent_id: str,
         limit: int | None = None,
         offset: int | None = None,
+        metadata: Dict[str, Any] | None = None,
     ) -> MemoryPointsOutput:
         """
         This endpoint retrieves memory points. The limit parameter is the maximum number of memory points to retrieve.
@@ -276,6 +277,7 @@ class MemoryEndpoint(AbstractEndpoint):
         :param agent_id: The agent ID.
         :param limit: The maximum number of memory points to retrieve.
         :param offset: The number of memory points to skip.
+        :param metadata: The metadata to filter the memory points.
         :return: MemoryPointsOutput, a list of memory points retrieved.
         """
         query = {}
@@ -283,6 +285,8 @@ class MemoryEndpoint(AbstractEndpoint):
             query["limit"] = limit
         if offset is not None:
             query["offset"] = offset
+        if metadata:
+            query["metadata"] = metadata  # type: ignore
 
         return self.get(
             self.format_url(f"/collections/{collection}/points"),
