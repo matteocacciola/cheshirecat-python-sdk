@@ -1,3 +1,4 @@
+import os
 from typing import Dict, Type, TypeVar, BinaryIO, Tuple
 import magic
 
@@ -16,4 +17,4 @@ def file_attributes(filename: str, file: BinaryIO) -> Tuple[str, BinaryIO, str]:
 
     file.seek(current_pos)
 
-    return filename, file, content_type
+    return os.path.basename(filename), file, content_type
