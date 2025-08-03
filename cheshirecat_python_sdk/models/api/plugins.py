@@ -69,6 +69,12 @@ class PluginItemRegistryOutput(BaseModel):
     version: str | None = None
     url: str | None = None
 
+    def __init__(self, /, **data: Any) -> None:
+        # if tags is a list, convert it to a comma-separated string
+        if "tags" in data and isinstance(data["tags"], list):
+            data["tags"] = ", ".join(data["tags"])
+        super().__init__(**data)
+
 
 class PluginsSettingsOutput(BaseModel):
     settings: List[PluginSettingsOutput]
