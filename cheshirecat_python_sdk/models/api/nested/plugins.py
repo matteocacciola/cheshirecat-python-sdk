@@ -19,3 +19,9 @@ class PluginSettingsOutput(BaseModel):
     name: str
     value: Dict[str, Any]
     scheme: PluginSchemaSettings | None = None
+
+    def __init__(self, /, **data: Any) -> None:
+        # if tags is a list, convert it to a comma-separated string
+        if "scheme" in data and isinstance(data["scheme"], Dict) and not data["scheme"]:
+            data["scheme"] = None
+        super().__init__(**data)
