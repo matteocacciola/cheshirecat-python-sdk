@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 from pydantic import BaseModel, Field
 
 from cheshirecat_python_sdk.models.api.nested.plugins import PluginSettingsOutput
@@ -43,6 +43,12 @@ class PluginItemOutput(BaseModel):
     tools: List[ToolOutput]
     forms: List[FormOutput]
     endpoints: List[EndpointOutput]
+
+    def __init__(self, /, **data: Any) -> None:
+        # if tags is a list, convert it to a comma-separated string
+        if "tags" in data and isinstance(data["tags"], list):
+            data["tags"] = ", ".join(data["tags"])
+        super().__init__(**data)
 
 
 class PluginCollectionOutput(BaseModel):
