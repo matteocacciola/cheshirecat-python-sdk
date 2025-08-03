@@ -3,20 +3,12 @@ from pydantic import BaseModel
 
 
 class SettingDeleteOutput(BaseModel):
-    deleted: bool
-
-
-class SettingOutput(BaseModel):
-    name: str
-    value: Dict[str, Any]
-    category: str
-    setting_id: str
-    updated_at: int | str
+    deleted: str
 
 
 class SettingOutputItem(BaseModel):
-    setting: SettingOutput
+    setting: Dict
 
 
 class SettingsOutputCollection(BaseModel):
-    settings: List[SettingOutput]
+    settings: List[Dict]

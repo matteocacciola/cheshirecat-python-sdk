@@ -1,5 +1,5 @@
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
-from cheshirecat_python_sdk.models.api.settings import SettingsOutputCollection, SettingOutputItem
+from cheshirecat_python_sdk.models.api.settings import SettingsOutputCollection, SettingOutputItem, SettingDeleteOutput
 
 
 class SettingsEndpoint(AbstractEndpoint):
@@ -44,12 +44,12 @@ class SettingsEndpoint(AbstractEndpoint):
         """
         return self.put(self.format_url(setting_id), agent_id, output_class=SettingOutputItem, payload=values)
 
-    def delete_setting(self, setting_id: str, agent_id: str) -> SettingOutputItem:
+    def delete_setting(self, setting_id: str, agent_id: str) -> SettingDeleteOutput:
         """
         This endpoint deletes the setting identified by the setting_id parameter. The setting must belong to the agent
         identified by the agent_id parameter.
         :param setting_id: The id of the setting to delete
         :param agent_id: The id of the agent to delete the setting for
-        :return: SettingOutputItem, the deleted setting
+        :return: SettingDeleteOutput, the deleted setting
         """
-        return self.delete(self.format_url(setting_id), agent_id, output_class=SettingOutputItem)
+        return self.delete(self.format_url(setting_id), agent_id, output_class=SettingDeleteOutput)
