@@ -6,17 +6,12 @@ from cheshirecat_python_sdk.models.dtos import Memory, MemoryPoint
 
 class MemoryBuilder(BaseBuilder):
     def __init__(self):
-        self.episodic: Dict[str, Any] | None = None
         self.declarative: Dict[str, Any] | None = None
         self.procedural: Dict[str, Any] | None = None
 
     @staticmethod
     def create():
         return MemoryBuilder()
-
-    def set_episodic(self, episodic: Dict[str, Any] | None = None):
-        self.episodic = episodic or {}
-        return self
 
     def set_declarative(self, declarative: Dict[str, Any] | None = None):
         self.declarative = declarative or {}
@@ -28,7 +23,6 @@ class MemoryBuilder(BaseBuilder):
 
     def build(self):
         memory = Memory()
-        memory.episodic = self.episodic
         memory.declarative = self.declarative
         memory.procedural = self.procedural
 

@@ -10,7 +10,6 @@ class AgentOutput(BaseModel):
 
 
 class Memory(BaseModel):
-    episodic: List | None = Field(default_factory=list)
     declarative: List | None = Field(default_factory=list)
     procedural: List | None = Field(default_factory=list)
 

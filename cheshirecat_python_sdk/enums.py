@@ -33,9 +33,4 @@ class Enum(BaseEnum, metaclass=MetaEnum):
 class Collection(str, Enum):
     DECLARATIVE = "declarative"
     PROCEDURAL = "procedural"
-    EPISODIC = "episodic"
 
-
-class Role(str, Enum):
-    AI = "AI"
-    HUMAN = "Human"

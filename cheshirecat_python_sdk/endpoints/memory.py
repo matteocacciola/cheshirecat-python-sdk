@@ -1,7 +1,7 @@
-from typing import Dict, Any
+from typing import Dict, Any, Literal
 import json
 
-from cheshirecat_python_sdk.enums import Collection, Role
+from cheshirecat_python_sdk.enums import Collection
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
 from cheshirecat_python_sdk.models.api.memories import (
     CollectionsOutput,
@@ -97,7 +97,7 @@ class MemoryEndpoint(AbstractEndpoint):
 
     def post_conversation_history(
         self,
-        who: Role,
+        who: Literal["user", "assistant"],
         text: str,
         agent_id: str,
         user_id: str,
