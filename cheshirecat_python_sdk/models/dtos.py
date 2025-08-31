@@ -2,13 +2,6 @@ from typing import Dict, List, Any
 from pydantic import BaseModel, Field
 
 
-class AgentOutput(BaseModel):
-    output: str | None = None
-    intermediate_steps: List[Dict[str, Any]] | None = Field(default_factory=list)
-    return_direct: bool = False
-    with_llm_error: bool = False
-
-
 class Memory(BaseModel):
     declarative: List | None = Field(default_factory=list)
     procedural: List | None = Field(default_factory=list)
