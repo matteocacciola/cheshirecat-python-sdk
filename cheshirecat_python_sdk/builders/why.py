@@ -9,7 +9,6 @@ class WhyBuilder(BaseBuilder):
         self.input: str | None = None
         self.intermediate_steps: Dict[str, Any] | None = None
         self.memory: Memory | None = None
-        self.model_interactions: Dict[str, Any] | None = None
 
     @staticmethod
     def create() -> "WhyBuilder":
@@ -27,14 +26,9 @@ class WhyBuilder(BaseBuilder):
         self.memory = memory
         return self
 
-    def set_model_interactions(self, model_interactions: Dict[str, Any] | None = None) -> "WhyBuilder":
-        self.model_interactions = model_interactions
-        return self
-
     def build(self) -> Why:
         return Why(
             input=self.input,
             intermediate_steps=self.intermediate_steps,
             memory=self.memory,
-            model_interactions=self.model_interactions,
         )

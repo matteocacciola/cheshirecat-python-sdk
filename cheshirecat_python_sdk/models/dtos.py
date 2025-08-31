@@ -38,4 +38,3 @@ class Why(BaseModel):
     input: str | None = None
     intermediate_steps: List | None = Field(default_factory=list)
     memory: Memory = Field(default_factory=Memory)
-    model_interactions: List | None = Field(default_factory=list)
