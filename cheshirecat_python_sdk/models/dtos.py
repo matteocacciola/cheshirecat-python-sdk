@@ -18,7 +18,6 @@ class MessageBase(BaseModel):
 
 
 class Message(MessageBase):
-    stream: bool | None = False
     metadata: Dict[str, Any] | None = None
 
 
