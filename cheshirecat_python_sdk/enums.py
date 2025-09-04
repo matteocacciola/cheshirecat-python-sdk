@@ -28,8 +28,3 @@ class Enum(BaseEnum, metaclass=MetaEnum):
 
     def __hash__(self):
         return hash(self.value)
-
-
-class Collection(str, Enum):
-    DECLARATIVE = "declarative"
-

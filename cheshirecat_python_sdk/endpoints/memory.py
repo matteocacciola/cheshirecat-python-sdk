@@ -1,7 +1,6 @@
 from typing import Dict, Any, Literal
 import json
 
-from cheshirecat_python_sdk.enums import Collection
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
 from cheshirecat_python_sdk.models.api.memories import (
     CollectionsOutput,
@@ -14,6 +13,7 @@ from cheshirecat_python_sdk.models.api.memories import (
     MemoryPointsDeleteByMetadataOutput,
     MemoryPointsOutput,
 )
+from cheshirecat_python_sdk.models.api.nested.memories import CollectionsItem
 from cheshirecat_python_sdk.models.dtos import Why, MemoryPoint
 
 
@@ -49,7 +49,7 @@ class MemoryEndpoint(AbstractEndpoint):
         )
 
     def delete_all_single_memory_collection_points(
-        self, collection: Collection, agent_id: str
+        self, collection: str, agent_id: str
     ) -> CollectionPointsDestroyOutput:
         """
         This method deletes all the points in a single collection of memory.
@@ -61,6 +61,19 @@ class MemoryEndpoint(AbstractEndpoint):
             self.format_url(f"/collections/{collection}"),
             agent_id,
             output_class=CollectionPointsDestroyOutput,
+        )
+
+    def post_memory_collections(self, collection_id: str, agent_id: str) -> CollectionsItem:
+        """
+        This endpoint returns the collections of memory points.
+        :param collection_id: The ID of the collection to create.
+        :param agent_id: The agent ID.
+        :return: CollectionsItem, the collection created.
+        """
+        return self.post_json(
+            self.format_url(f"/collections/{collection_id}"),
+            agent_id,
+            output_class=CollectionsItem,
         )
 
     # END Memory Collections API
@@ -115,7 +128,7 @@ class MemoryEndpoint(AbstractEndpoint):
         :return: ConversationHistoryOutput, the conversation history entry created.
         """
         payload = {
-            "who": who.value,
+            "who": who,
             "text": text,
         }
         if image:
@@ -169,7 +182,7 @@ class MemoryEndpoint(AbstractEndpoint):
 
     def post_memory_point(
         self,
-        collection: Collection,
+        collection: str,
         agent_id: str,
         user_id: str,
         memory_point: MemoryPoint,
@@ -196,7 +209,7 @@ class MemoryEndpoint(AbstractEndpoint):
 
     def put_memory_point(
         self,
-        collection: Collection,
+        collection: str,
         agent_id: str,
         user_id: str,
         memory_point: MemoryPoint,
@@ -225,7 +238,7 @@ class MemoryEndpoint(AbstractEndpoint):
 
     def delete_memory_point(
         self,
-        collection: Collection,
+        collection: str,
         agent_id: str,
         point_id: str,
     ) -> MemoryPointDeleteOutput:
@@ -244,7 +257,7 @@ class MemoryEndpoint(AbstractEndpoint):
 
     def delete_memory_points_by_metadata(
         self,
-        collection: Collection,
+        collection: str,
         agent_id: str,
         metadata: Dict[str, Any] | None = None,
     ) -> MemoryPointsDeleteByMetadataOutput:
@@ -265,7 +278,7 @@ class MemoryEndpoint(AbstractEndpoint):
 
     def get_memory_points(
         self,
-        collection: Collection,
+        collection: str,
         agent_id: str,
         limit: int | None = None,
         offset: int | None = None,

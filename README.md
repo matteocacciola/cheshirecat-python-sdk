@@ -66,7 +66,7 @@ result = asyncio.run(cheshire_cat_client.rabbit_hole.post_web(url, "agent"))
 Memory management utilities:
 
 ```python
-from cheshirecat_python_sdk import Collection, CheshireCatClient, Configuration, Message
+from cheshirecat_python_sdk import CheshireCatClient, Configuration, Message
 
 configuration = Configuration(host="localhost", port=1865, auth_key="test", secure_connection=False)
 cheshire_cat_client = CheshireCatClient(configuration)
@@ -77,5 +77,5 @@ cheshire_cat_client.memory.get_memory_recall("HELLO", "agent", "user")  # recall
 url = "https://www.google.com"
 
 # delete memory points by metadata, like this example delete by source
-cheshire_cat_client.memory.delete_memory_points_by_metadata(Collection.DECLARATIVE, "agent", {"source": url})
+cheshire_cat_client.memory.delete_memory_points_by_metadata("declarative", "agent", {"source": url})
 ```
