@@ -32,5 +32,4 @@ class Enum(BaseEnum, metaclass=MetaEnum):
 
 class Collection(str, Enum):
     DECLARATIVE = "declarative"
-    PROCEDURAL = "procedural"
 

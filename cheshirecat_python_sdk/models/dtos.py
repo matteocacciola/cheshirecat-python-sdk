@@ -4,7 +4,6 @@ from pydantic import BaseModel, Field
 
 class Memory(BaseModel):
     declarative: List | None = Field(default_factory=list)
-    procedural: List | None = Field(default_factory=list)
 
 
 class MemoryPoint(BaseModel):
