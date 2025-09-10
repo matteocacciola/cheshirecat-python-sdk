@@ -7,5 +7,5 @@ class Configuration(BaseModel):
     """
     host: str = "localhost"
     port: int = 1865
-    auth_key: str = ""
+    auth_key: str | None = None
     secure_connection: bool = False

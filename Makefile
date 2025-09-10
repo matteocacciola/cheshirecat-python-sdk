@@ -22,7 +22,7 @@ compile: ## Compile requirements for the local virtual environment.
 	$(PYTHON) -m pip install --upgrade pip-tools pip wheel
 	$(PIP_COMPILE) --no-upgrade --output-file requirements.txt pyproject.toml
 
-update: ## Compile requirements for the local virtual environment.
+update: ## Update requirements for the local virtual environment.
 	$(PIP_COMPILE) --upgrade --output-file requirements.txt pyproject.toml
 
 publish:  ## Publish the package to PyPI.
