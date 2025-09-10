@@ -12,3 +12,4 @@ from cheshirecat_python_sdk.endpoints.rabbit_hole import RabbitHoleEndpoint
 from cheshirecat_python_sdk.endpoints.settings import SettingsEndpoint
 from cheshirecat_python_sdk.endpoints.users import UsersEndpoint
 from cheshirecat_python_sdk.endpoints.vector_database import VectorDatabaseEndpoint
+from cheshirecat_python_sdk.endpoints.health_check import HealthCheckEndpoint

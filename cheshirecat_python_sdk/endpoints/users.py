@@ -16,7 +16,7 @@ class UsersEndpoint(AbstractEndpoint):
         This endpoint is used to get a token for the user. The token is used to authenticate the user in the system. When
         the token expires, the user must request a new token.
         """
-        response = self.get_http_client().post("/auth/token", json={
+        response = self.get_http_session().post("/auth/token", json={
             "username": username,
             "password": password,
         })

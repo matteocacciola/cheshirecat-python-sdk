@@ -15,6 +15,7 @@ from cheshirecat_python_sdk.endpoints import (
     SettingsEndpoint,
     UsersEndpoint,
     VectorDatabaseEndpoint,
+    HealthCheckEndpoint,
 )
 
 
@@ -104,3 +105,7 @@ class CheshireCatClient:
     @property
     def vector_database(self):
         return VectorDatabaseEndpoint(self)
+
+    @property
+    def health_check(self):
+        return HealthCheckEndpoint(self)

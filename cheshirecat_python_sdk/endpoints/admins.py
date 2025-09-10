@@ -29,7 +29,7 @@ class AdminsEndpoint(AbstractEndpoint):
         :param password: The password of the user.
         :return: TokenOutput, the token of the user.
         """
-        response = self.get_http_client().post(
+        response = self.get_http_session().post(
             self.format_url("/auth/token"),
             json={"username": username, "password": password},
         )

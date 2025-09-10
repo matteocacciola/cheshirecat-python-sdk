@@ -59,6 +59,9 @@ class HttpClient:
         for middleware in self.middlewares:
             middleware()
 
+        return self.get_base_session()
+
+    def get_base_session(self) -> BaseUrlSession:
         session = BaseUrlSession(base_url=self.get_http_uri())
         session.headers = self.headers
 

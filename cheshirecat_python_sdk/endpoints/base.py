@@ -24,6 +24,9 @@ class AbstractEndpoint(ABC):
     def get_http_client(self, agent_id: str | None = None, user_id: str | None = None) -> requests.Session:
         return self.client.http_client.get_client(agent_id, user_id)
 
+    def get_http_session(self):
+        return self.client.http_client.get_base_session()
+
     async def get_ws_client(self, agent_id: str, user_id: str) -> ClientConnection:
         return await self.client.ws_client.get_client(agent_id, user_id)
 
