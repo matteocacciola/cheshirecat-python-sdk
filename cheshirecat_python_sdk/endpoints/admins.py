@@ -11,7 +11,7 @@ from cheshirecat_python_sdk.models.api.admins import (
     PluginDeleteOutput,
 )
 from cheshirecat_python_sdk.models.api.nested.plugins import PluginSettingsOutput
-from cheshirecat_python_sdk.models.api.plugins import PluginCollectionOutput, PluginsSettingsOutput
+from cheshirecat_python_sdk.models.api.plugins import PluginCollectionOutput, PluginsSettingsOutput, PluginToggleOutput
 from cheshirecat_python_sdk.models.api.tokens import TokenOutput
 from cheshirecat_python_sdk.utils import deserialize, file_attributes
 
@@ -235,3 +235,15 @@ class AdminsEndpoint(AbstractEndpoint):
         :return: PluginDeleteOutput, the details of the plugin.
         """
         return self.delete(self.format_url(f"/plugins/{plugin_id}"), self.system_id, output_class=PluginDeleteOutput)
+
+    def put_toggle_plugin(self, plugin_id: str) -> PluginToggleOutput:
+        """
+        This endpoint toggles a plugin, on a system level
+        :param plugin_id: The id of the plugin to toggle
+        :return: PluginToggleOutput, the toggled plugin
+        """
+        return self.put(
+            self.format_url(f"/toggle/{plugin_id}"),
+            self.system_id,
+            output_class=PluginToggleOutput,
+        )
