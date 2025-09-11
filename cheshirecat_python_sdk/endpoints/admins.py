@@ -243,7 +243,7 @@ class AdminsEndpoint(AbstractEndpoint):
         :return: PluginToggleOutput, the toggled plugin
         """
         return self.put(
-            self.format_url(f"/toggle/{plugin_id}"),
+            self.format_url(f"/plugins/toggle/{plugin_id}"),
             self.system_id,
             output_class=PluginToggleOutput,
         )
