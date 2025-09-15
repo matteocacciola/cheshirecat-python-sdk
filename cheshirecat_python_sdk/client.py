@@ -12,7 +12,6 @@ from cheshirecat_python_sdk.endpoints import (
     MessageEndpoint,
     PluginsEndpoint,
     RabbitHoleEndpoint,
-    SettingsEndpoint,
     UsersEndpoint,
     VectorDatabaseEndpoint,
     HealthCheckEndpoint,
@@ -89,10 +88,6 @@ class CheshireCatClient:
     @property
     def rabbit_hole(self):
         return RabbitHoleEndpoint(self)
-
-    @property
-    def settings(self):
-        return SettingsEndpoint(self)
 
     @property
     def users(self):
