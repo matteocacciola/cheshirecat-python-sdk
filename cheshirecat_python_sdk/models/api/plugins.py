@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Dict
 from pydantic import BaseModel, Field
 
 from cheshirecat_python_sdk.models.api.nested.plugins import PluginSettingsOutput
@@ -38,11 +38,7 @@ class PluginItemOutput(BaseModel):
     tags: str | None = None
     thumb: str | None = None
     version: str | None = None
-    active: bool
-    hooks: List[HookOutput]
-    tools: List[ToolOutput]
-    forms: List[FormOutput]
-    endpoints: List[EndpointOutput]
+    local_info: Dict = Field(default_factory=dict)
 
     def __init__(self, /, **data: Any) -> None:
         # if tags is a list, convert it to a comma-separated string
