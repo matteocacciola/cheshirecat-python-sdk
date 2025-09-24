@@ -1,12 +1,10 @@
-from typing import Dict, Any, Literal
+from typing import Dict, Any
 import json
 
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
 from cheshirecat_python_sdk.models.api.memories import (
     CollectionsOutput,
     CollectionPointsDestroyOutput,
-    ConversationHistoryOutput,
-    ConversationHistoryDeleteOutput,
     MemoryRecallOutput,
     MemoryPointOutput,
     MemoryPointDeleteOutput,
@@ -77,74 +75,6 @@ class MemoryEndpoint(AbstractEndpoint):
         )
 
     # END Memory Collections API
-
-    # Memory Conversation History API
-
-    def get_conversation_history(self, agent_id: str, user_id: str) -> ConversationHistoryOutput:
-        """
-        This endpoint returns the conversation history.
-        :param agent_id: The agent ID.
-        :param user_id: The user ID to filter the conversation history.
-        :return: ConversationHistoryOutput, a list of conversation history entries.
-        """
-        return self.get(
-            self.format_url("/conversation_history"),
-            agent_id,
-            user_id=user_id,
-            output_class=ConversationHistoryOutput,
-        )
-
-    def delete_conversation_history(self, agent_id: str, user_id: str) -> ConversationHistoryDeleteOutput:
-        """
-        This endpoint deletes the conversation history.
-        :param agent_id: The agent ID.
-        :param user_id: The user ID to filter the conversation history.
-        :return: ConversationHistoryDeleteOutput, a message indicating the number of conversation history entries deleted.
-        """
-        return self.delete(
-            self.format_url("/conversation_history"),
-            agent_id,
-            output_class=ConversationHistoryDeleteOutput,
-            user_id=user_id,
-        )
-
-    def post_conversation_history(
-        self,
-        who: Literal["user", "assistant"],
-        text: str,
-        agent_id: str,
-        user_id: str,
-        image: str | bytes | None = None,
-        why: Why | None = None,
-    ) -> ConversationHistoryOutput:
-        """
-        This endpoint creates a new element in the conversation history.
-        :param who: The role of the user in the conversation.
-        :param text: The text of the conversation history entry.
-        :param agent_id: The agent ID.
-        :param user_id: The user ID to filter the conversation history.
-        :param image: The image of the conversation history entry.
-        :param why: The reason for the conversation history entry.
-        :return: ConversationHistoryOutput, the conversation history entry created.
-        """
-        payload = {
-            "who": who,
-            "text": text,
-        }
-        if image:
-            payload["image"] = image
-        if why:
-            payload["why"] = why.model_dump()
-
-        return self.post_json(
-            self.format_url("/conversation_history"),
-            agent_id,
-            output_class=ConversationHistoryOutput,
-            payload=payload,
-            user_id=user_id,
-        )
-
-    # END Memory Conversation History API
 
     # Memory Points API
 

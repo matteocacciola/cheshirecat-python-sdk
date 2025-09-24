@@ -3,7 +3,6 @@ from pydantic import BaseModel
 
 from cheshirecat_python_sdk.models.api.nested.memories import (
     CollectionsItem,
-    ConversationHistoryItem,
     MemoryPointsDeleteByMetadataInfo,
     Record,
     MemoryRecallQuery,
@@ -18,14 +17,6 @@ class CollectionPointsDestroyOutput(BaseModel):
 
 class CollectionsOutput(BaseModel):
     collections: List[CollectionsItem]
-
-
-class ConversationHistoryDeleteOutput(BaseModel):
-    deleted: bool
-
-
-class ConversationHistoryOutput(BaseModel):
-    history: List[ConversationHistoryItem]
 
 
 class MemoryPointDeleteOutput(BaseModel):

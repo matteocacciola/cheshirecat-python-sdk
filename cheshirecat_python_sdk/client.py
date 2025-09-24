@@ -4,6 +4,7 @@ from cheshirecat_python_sdk.endpoints import (
     AdminsEndpoint,
     AuthHandlerEndpoint,
     ChunkerEndpoint,
+    ConversationEndpoint,
     CustomEndpoint,
     EmbedderEndpoint,
     FileManagerEndpoint,
@@ -60,6 +61,10 @@ class CheshireCatClient:
     @property
     def chunker(self):
         return ChunkerEndpoint(self)
+
+    @property
+    def conversation(self):
+        return ConversationEndpoint(self)
 
     @property
     def embedder(self):
