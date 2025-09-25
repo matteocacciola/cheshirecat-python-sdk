@@ -20,6 +20,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         self,
         file_path,
         agent_id: str,
+        chat_id: str | None = None,
         file_name: str | None = None,
         metadata: Dict[str, Any] | None = None,
     ) -> UploadSingleFileResponse:
@@ -30,6 +31,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         The CheshireCat processes the injection in background and the client will be informed at the end of the process.
         :param file_path: The path to the file to upload.
         :param agent_id: The ID of the agent.
+        :param chat_id: The ID of the chat (optional).
         :param file_name: The name of the file.
         :param metadata: The metadata to include with the file.
         :return: The response from the RabbitHole API.
@@ -40,9 +42,11 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         if metadata is not None:
             payload.data["metadata"] = json.dumps(metadata)
 
+        endpoint = self.prefix if not chat_id else self.format_url(chat_id)
+
         with open(file_path, "rb") as file:
             payload.files = [("file", file_attributes(file_name, file))]
-            result = self.post_multipart(self.prefix, agent_id, output_class=UploadSingleFileResponse, payload=payload)
+            result = self.post_multipart(endpoint, agent_id, output_class=UploadSingleFileResponse, payload=payload)
 
         return result
 
@@ -50,6 +54,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         self,
         file_paths: List[str],
         agent_id: str,
+        chat_id: str | None = None,
         metadata: Dict[str, Any] | None = None
     ) -> Dict[str, UploadSingleFileResponse]:  # type: ignore
         """
@@ -58,6 +63,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         The CheshireCat processes the injection in background and the client will be informed at the end of the process.
         :param file_paths: The paths to the files to upload.
         :param agent_id: The ID of the agent.
+        :param chat_id: The ID of the chat (optional).
         :param metadata: The metadata to include with the files.
         :return: The response from the RabbitHole API.
         """
@@ -67,13 +73,15 @@ class RabbitHoleEndpoint(AbstractEndpoint):
 
         files = []
         file_handles = []
+
+        endpoint = self.format_url("/batch") if not chat_id else self.format_url(f"/batch/{chat_id}")
         try:
             for file_path in file_paths:
                 file = open(file_path, "rb")
                 file_handles.append(file)
                 files.append(("files", file_attributes(Path(file_path).name, file)))
 
-            response = self.get_http_client(agent_id).post(self.format_url("/batch"), data=data, files=files)
+            response = self.get_http_client(agent_id).post(endpoint, data=data, files=files)
             response.raise_for_status()
 
             result = {}
