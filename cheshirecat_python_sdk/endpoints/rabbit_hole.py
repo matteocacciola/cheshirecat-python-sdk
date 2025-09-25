@@ -96,6 +96,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         self,
         web_url: str,
         agent_id: str,
+        chat_id: str | None = None,
         metadata: Dict[str, Any] | None = None
     ) -> UploadUrlResponse:
         """
@@ -105,6 +106,7 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         The CheshireCat processes the injection in background, and the client will be informed at the end of the process.
         :param web_url: The URL of the website to ingest.
         :param agent_id: The ID of the agent.
+        :param chat_id: The ID of the chat (optional).
         :param metadata: The metadata to include with the files.
         :return: The response from the RabbitHole API.
         """
@@ -112,7 +114,9 @@ class RabbitHoleEndpoint(AbstractEndpoint):
         if metadata is not None:
             payload["metadata"] = metadata  # type: ignore
 
-        return self.post_json(self.format_url("/web"), agent_id, output_class=UploadUrlResponse, payload=payload)
+        endpoint = self.format_url("/web") if not chat_id else self.format_url(f"/web/{chat_id}")
+
+        return self.post_json(endpoint, agent_id, output_class=UploadUrlResponse, payload=payload)
 
     def post_memory(
         self,
