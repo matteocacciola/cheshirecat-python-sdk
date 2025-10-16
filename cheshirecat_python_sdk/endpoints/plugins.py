@@ -74,3 +74,16 @@ class PluginsEndpoint(AbstractEndpoint):
             output_class=PluginSettingsOutput,
             payload=values,
         )
+
+    def post_plugin_reset_settings(self, plugin_id: str, agent_id: str) -> PluginSettingsOutput:
+        """
+        This endpoint resets the plugin settings to the factory values
+        :param plugin_id: The id of the plugin
+        :param agent_id: The id of the agent
+        :return: PluginSettingsOutput, the plugin settings after reset
+        """
+        return self.post_json(
+            self.format_url(f"/settings/{plugin_id}"),
+            agent_id,
+            output_class=PluginSettingsOutput,
+        )
