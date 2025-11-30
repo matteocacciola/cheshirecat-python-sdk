@@ -12,3 +12,7 @@ class FileResponse(BaseModel):
 class FileManagerAttributes(BaseModel):
     files: List[FileResponse]
     size: int
+
+
+class FileManagerDeletedFiles(BaseModel):
+    deleted: bool
