@@ -36,3 +36,7 @@ class ResetOutput(BaseModel):
     deleted_settings: bool
     deleted_memories: bool
     deleted_plugin_folders: bool
+
+
+class ClonedOutput(BaseModel):
+    cloned: bool = False

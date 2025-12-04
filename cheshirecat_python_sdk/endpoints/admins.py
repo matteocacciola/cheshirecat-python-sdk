@@ -3,8 +3,6 @@ from typing import List, Any
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint, MultipartPayload
 from cheshirecat_python_sdk.models.api.admins import (
     AdminOutput,
-    ResetOutput,
-    CreatedOutput,
     PluginInstallOutput,
     PluginInstallFromRegistryOutput,
     PluginDetailsOutput,
@@ -125,44 +123,6 @@ class AdminsEndpoint(AbstractEndpoint):
         :return: AdminOutput, the details of the user.
         """
         return self.delete(self.format_url(f"/users/{admin_id}"), self.system_id, output_class=AdminOutput)
-
-    def post_factory_reset(self) -> ResetOutput:
-        """
-        Reset the system to the factory settings.
-        :return: ResetOutput, the details of the reset.
-        """
-        return self.post_json(self.format_url("/utils/factory/reset/"), self.system_id, output_class=ResetOutput)
-
-    def get_agents(self) -> List[str]:
-        """
-        Get a list of all agents.
-        :return: List[str], the IDs of the agents.
-        """
-        return self.get(self.format_url("/utils/agents/"), self.system_id)
-
-    def post_agent_create(self, agent_id: str) -> CreatedOutput:
-        """
-        Create a new agent.
-        :param agent_id: The ID of the agent.
-        :return: CreatedOutput, the details of the agent.
-        """
-        return self.post_json(self.format_url("/utils/agent/create/"), agent_id, output_class=CreatedOutput)
-
-    def post_agent_reset(self, agent_id: str) -> ResetOutput:
-        """
-        Reset an agent to the factory settings.
-        :param agent_id: The ID of the agent.
-        :return: ResetOutput, the details of the reset.
-        """
-        return self.post_json(self.format_url("/utils/agent/reset/"), agent_id, output_class=ResetOutput)
-
-    def post_agent_destroy(self, agent_id: str) -> ResetOutput:
-        """
-        Destroy an agent.
-        :param agent_id: The ID of the agent.
-        :return: ResetOutput, the details of the reset.
-        """
-        return self.post_json(self.format_url("/utils/agent/destroy/"), agent_id, output_class=ResetOutput)
 
     def get_available_plugins(self, plugin_name: str | None = None) -> PluginCollectionOutput:
         """
