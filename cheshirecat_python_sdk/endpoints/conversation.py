@@ -37,7 +37,7 @@ class ConversationEndpoint(AbstractEndpoint):
         response.raise_for_status()
 
         result = {}
-        for key, item in response.json():
+        for key, item in response.json().items():
             result[key] = deserialize(item, ConversationHistoryOutput)
         return result
 
