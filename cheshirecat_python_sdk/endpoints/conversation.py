@@ -1,8 +1,12 @@
-from typing import Literal, Dict
+from typing import List
 
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
-from cheshirecat_python_sdk.models.api.conversations import ConversationHistoryOutput, ConversationHistoryDeleteOutput
-from cheshirecat_python_sdk.models.dtos import Why
+from cheshirecat_python_sdk.models.api.conversations import (
+    ConversationHistoryOutput,
+    ConversationDeleteOutput,
+    ConversationsResponse,
+    ConversationNameChangeOutput,
+)
 from cheshirecat_python_sdk.utils import deserialize
 
 
@@ -26,70 +30,54 @@ class ConversationEndpoint(AbstractEndpoint):
             output_class=ConversationHistoryOutput,
         )
 
-    def get_conversation_histories(self, agent_id: str, user_id: str) -> Dict[str, ConversationHistoryOutput]:
+    def get_conversations(self, agent_id: str, user_id: str) -> List[ConversationsResponse]:
         """
-        This endpoint returns the conversation histories.
+        This endpoint returns the attributes of the different conversations, given the `agent_id` and the `user_id`.
         :param agent_id: The agent ID.
         :param user_id: The user ID to filter the conversation history.
-        :return: ConversationHistoryOutput, a list of conversation history entries.
+        :return: List[ConversationsResponse], a list of conversation attributes.
         """
         response = self.get_http_client(agent_id, user_id).get(self.prefix)
         response.raise_for_status()
 
-        result = {}
-        for key, item in response.json().items():
-            result[key] = deserialize(item, ConversationHistoryOutput)
-        return result
+        return [deserialize(item, ConversationsResponse) for item in response.json()]
 
-    def delete_conversation_history(self, agent_id: str, user_id: str, chat_id: str) -> ConversationHistoryDeleteOutput:
+    def delete_conversation(self, agent_id: str, user_id: str, chat_id: str) -> ConversationDeleteOutput:
         """
-        This endpoint deletes the conversation history.
+        This endpoint deletes the conversation.
         :param agent_id: The agent ID.
         :param user_id: The user ID to filter the conversation history.
         :param chat_id: The chat ID to filter the conversation history.
-        :return: ConversationHistoryDeleteOutput, a message indicating the number of conversation history entries deleted.
+        :return: ConversationDeleteOutput, a message indicating whether the conversation was deleted.
         """
         return self.delete(
             self.format_url(chat_id),
             agent_id,
-            output_class=ConversationHistoryDeleteOutput,
+            output_class=ConversationDeleteOutput,
             user_id=user_id,
         )
 
-    def post_conversation_history(
+    def post_conversation_name(
         self,
-        who: Literal["user", "assistant"],
-        text: str,
+        name: str,
         agent_id: str,
         user_id: str,
         chat_id: str,
-        image: str | bytes | None = None,
-        why: Why | None = None,
-    ) -> ConversationHistoryOutput:
+    ) -> ConversationNameChangeOutput:
         """
         This endpoint creates a new element in the conversation history.
-        :param who: The role of the user in the conversation.
-        :param text: The text of the conversation history entry.
+        :param name: The new name to assign to the conversation
         :param agent_id: The agent ID.
         :param user_id: The user ID to filter the conversation history.
         :param chat_id: The chat ID to filter the conversation history.
-        :param image: The image of the conversation history entry.
-        :param why: The reason for the conversation history entry.
-        :return: ConversationHistoryOutput, the conversation history entry created.
+        :return: ConversationNameChangeOutput, a message indicating whether the conversation name was changed.
         """
-        payload = {
-            "who": who,
-            "text": text,
-        }
-        if image:
-            payload["image"] = image
-        if why:
-            payload["why"] = why.model_dump()
+        payload = {"name": name}
 
         return self.post_json(
             self.format_url(chat_id),
             agent_id,
-            output_class=ConversationHistoryOutput,
+            output_class=ConversationNameChangeOutput,
             payload=payload,
             user_id=user_id,
         )

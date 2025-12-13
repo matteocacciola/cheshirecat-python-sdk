@@ -13,7 +13,7 @@ class ConversationHistoryItemContent(MessageBase):
     why: Why | None = None
 
 
-class ConversationHistoryItem(BaseModel):
+class ConversationMessage(BaseModel):
     who: str
     when: float
     content: ConversationHistoryItemContent
