@@ -21,14 +21,19 @@ class AbstractEndpoint(ABC):
     def format_url(self, endpoint: str) -> str:
         return f"/{self.prefix}/{endpoint}".replace("//", "/")
 
-    def get_http_client(self, agent_id: str | None = None, user_id: str | None = None) -> requests.Session:
-        return self.client.http_client.get_client(agent_id, user_id)
+    def get_http_client(
+        self,
+        agent_id: str | None = None,
+        user_id: str | None = None,
+        chat_id: str | None = None,
+    ) -> requests.Session:
+        return self.client.http_client.get_client(agent_id, user_id, chat_id)
 
     def get_http_session(self):
         return self.client.http_client.get_base_session()
 
-    async def get_ws_client(self, agent_id: str, user_id: str) -> ClientConnection:
-        return await self.client.ws_client.get_client(agent_id, user_id)
+    async def get_ws_client(self, agent_id: str, user_id: str, chat_id: str | None = None) -> ClientConnection:
+        return await self.client.ws_client.get_client(agent_id, user_id, chat_id)
 
     def get(
         self,
@@ -56,12 +61,13 @@ class AbstractEndpoint(ABC):
         output_class: Type[T] | None = None,
         payload: Dict[str, Any] | None = None,
         user_id: str | None = None,
+        chat_id: str | None = None,
     ) -> T:
         options = {}
         if payload:
             options["json"] = payload
 
-        response = self.get_http_client(agent_id, user_id).post(endpoint, **options)
+        response = self.get_http_client(agent_id, user_id, chat_id).post(endpoint, **options)
         response.raise_for_status()
 
         if output_class is None:

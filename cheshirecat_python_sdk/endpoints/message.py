@@ -8,12 +8,20 @@ from cheshirecat_python_sdk.utils import deserialize
 
 
 class MessageEndpoint(AbstractEndpoint):
-    def send_http_message(self, message: Message, agent_id: str, user_id: str) -> MessageOutput:
+    def send_http_message(
+        self,
+        message: Message,
+        agent_id: str,
+        user_id: str,
+        chat_id: str | None = None,
+    ) -> MessageOutput:
         """
         This endpoint sends a message to the agent identified by the agentId parameter. The message is sent via HTTP.
         :param message: Message object, the message to send
         :param agent_id: the agent id
         :param user_id: the user id
+        :param chat_id: the chat id (optional)
+        :return: MessageOutput object
         """
         return self.post_json(
             '/message',
@@ -21,6 +29,7 @@ class MessageEndpoint(AbstractEndpoint):
             output_class=MessageOutput,
             payload=message.model_dump(),
             user_id=user_id,
+            chat_id=chat_id,
         )
 
     async def send_websocket_message(
@@ -28,6 +37,7 @@ class MessageEndpoint(AbstractEndpoint):
         message: Message,
         agent_id: str,
         user_id: str,
+        chat_id: str | None = None,
         callback: Callable[[str], None] | None = None
     ) -> MessageOutput:
         """
@@ -35,14 +45,16 @@ class MessageEndpoint(AbstractEndpoint):
         :param message: Message object, the message to send
         :param agent_id: the agent id
         :param user_id: the user id
+        :param chat_id: the chat id
         :param callback: callable, a callback function that will be called for each message received
+        :return: MessageOutput object
         """
         try:
             json_data = json.dumps(message.model_dump())
         except Exception:
             raise RuntimeError("Error encoding message")
 
-        client = await self.get_ws_client(agent_id, user_id)
+        client = await self.get_ws_client(agent_id, user_id, chat_id)
 
         try:
             await client.send(json_data)

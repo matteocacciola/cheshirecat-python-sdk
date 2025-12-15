@@ -15,8 +15,9 @@ class HttpClient:
         self.port = port
         self.apikey = apikey
         self.token = None
-        self.user_id = None
         self.agent_id = None
+        self.user_id = None
+        self.chat_id = None
         self.is_https = is_https
         self.headers = {}
 
@@ -38,23 +39,33 @@ class HttpClient:
     def __before_secure_request(self):
         if self.apikey:
             self.headers["Authorization"] = f"Bearer {self.apikey}"
-        if self.user_id:
-            self.headers["user_id"] = self.user_id
         if self.agent_id:
             self.headers["agent_id"] = self.agent_id
+        if self.user_id:
+            self.headers["user_id"] = self.user_id
+        if self.chat_id:
+            self.headers["chat_id"] = self.chat_id
 
     def __before_jwt_request(self):
         if self.token:
             self.headers["Authorization"] = f"Bearer {self.token}"
         if self.agent_id:
             self.headers["agent_id"] = self.agent_id
+        if self.chat_id:
+            self.headers["chat_id"] = self.chat_id
 
-    def get_client(self, agent_id: str | None = None, user_id: str | None = None) -> BaseUrlSession:
+    def get_client(
+        self,
+        agent_id: str | None = None,
+        user_id: str | None = None,
+        chat_id: str | None = None,
+    ) -> BaseUrlSession:
         if not self.apikey and not self.token:
             raise ValueError("You must provide an apikey or a token")
 
         self.agent_id = agent_id
         self.user_id = user_id
+        self.chat_id = chat_id
 
         for middleware in self.middlewares:
             middleware()
