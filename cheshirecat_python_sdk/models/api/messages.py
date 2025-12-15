@@ -1,4 +1,4 @@
-from pydantic import Field
+from pydantic import Field, BaseModel
 
 from cheshirecat_python_sdk.models.dtos import MessageBase, Why
 
@@ -12,3 +12,10 @@ class MessageOutput(MessageBase):
     def __init__(self, **data):
         super().__init__(**data)
         self.content = self.text
+
+
+class ChatOutput(BaseModel):
+    agent_id: str
+    user_id: str
+    chat_id: str
+    message: MessageOutput
