@@ -2,6 +2,7 @@ from abc import ABC
 from typing import Dict, Any, List, Tuple, Type
 import requests
 from pydantic import BaseModel
+from requests_toolbelt.sessions import BaseUrlSession
 from websockets import ClientConnection
 
 from cheshirecat_python_sdk.utils import T, deserialize
@@ -29,7 +30,7 @@ class AbstractEndpoint(ABC):
     ) -> requests.Session:
         return self.client.http_client.get_client(agent_id, user_id, chat_id)
 
-    def get_http_session(self):
+    def get_http_session(self) -> BaseUrlSession:
         return self.client.http_client.get_base_session()
 
     async def get_ws_client(self, agent_id: str, user_id: str, chat_id: str | None = None) -> ClientConnection:

@@ -2,6 +2,7 @@ from typing import List
 
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
 from cheshirecat_python_sdk.models.api.admins import ResetOutput, ClonedOutput, CreatedOutput
+from cheshirecat_python_sdk.utils import deserialize
 
 
 class UtilsEndpoint(AbstractEndpoint):
@@ -29,7 +30,15 @@ class UtilsEndpoint(AbstractEndpoint):
         :param agent_id: The ID of the agent.
         :return: CreatedOutput, the details of the agent.
         """
-        return self.post_json(self.format_url("/agents/create/"), agent_id, output_class=CreatedOutput)
+        response = self.get_http_client().post(
+            self.format_url("/agents/create/"),
+            json={
+                "agent_id": agent_id,
+            },
+        )
+        response.raise_for_status()
+
+        return deserialize(response.json(), CreatedOutput)
 
     def post_agent_reset(self, agent_id: str) -> ResetOutput:
         """
