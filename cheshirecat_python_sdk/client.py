@@ -2,6 +2,7 @@ from cheshirecat_python_sdk.clients import HttpClient, WSClient
 from cheshirecat_python_sdk.configuration import Configuration
 from cheshirecat_python_sdk.endpoints import (
     AdminsEndpoint,
+    AuthEndpoint,
     AuthHandlerEndpoint,
     ChunkerEndpoint,
     ConversationEndpoint,
@@ -54,6 +55,10 @@ class CheshireCatClient:
     @property
     def admins(self):
         return AdminsEndpoint(self)
+
+    @property
+    def auth(self):
+        return AuthEndpoint(self)
 
     @property
     def auth_handler(self):

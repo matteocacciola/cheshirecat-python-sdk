@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List
 
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint, MultipartPayload
 from cheshirecat_python_sdk.models.api.admins import (
@@ -10,7 +10,6 @@ from cheshirecat_python_sdk.models.api.admins import (
 )
 from cheshirecat_python_sdk.models.api.nested.plugins import PluginSettingsOutput
 from cheshirecat_python_sdk.models.api.plugins import PluginCollectionOutput, PluginsSettingsOutput, PluginToggleOutput
-from cheshirecat_python_sdk.models.api.tokens import TokenOutput
 from cheshirecat_python_sdk.utils import deserialize, file_attributes
 
 
@@ -18,35 +17,6 @@ class AdminsEndpoint(AbstractEndpoint):
     def __init__(self, client: "CheshireCatClient"):
         super().__init__(client)
         self.prefix = "/admins"
-
-    def token(self, username: str, password: str) -> TokenOutput:
-        """
-        This endpoint is used to get a token for the user. The token is used to authenticate the user in the system.
-        When the token expires, the user must request a new token.
-        :param username: The username of the user.
-        :param password: The password of the user.
-        :return: TokenOutput, the token of the user.
-        """
-        response = self.get_http_session().post(
-            self.format_url("/auth/token"),
-            json={"username": username, "password": password},
-        )
-        response.raise_for_status()
-
-        result = deserialize(response.json(), TokenOutput)
-        self.client.add_token(result.access_token)
-        return result
-
-    def get_available_permissions(self) -> dict[int | str, Any]:
-        """
-        This endpoint is used to get a list of available permissions in the system. The permissions are used to define
-        the access rights of the users in the system. The permissions are defined by the system administrator.
-        :return array<int|string, Any>, the available permissions
-        """
-        response = self.get_http_client().get(self.format_url("/auth/available-permissions"))
-        response.raise_for_status()
-
-        return response.json()
 
     def post_admin(self, username: str, password: str, permissions: dict | None = None) -> AdminOutput:
         """

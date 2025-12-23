@@ -40,19 +40,19 @@ class HttpClient:
         if self.apikey:
             self.headers["Authorization"] = f"Bearer {self.apikey}"
         if self.agent_id:
-            self.headers["agent_id"] = self.agent_id
+            self.headers["X-Agent-ID"] = self.agent_id
         if self.user_id:
-            self.headers["user_id"] = self.user_id
+            self.headers["X-User-ID"] = self.user_id
         if self.chat_id:
-            self.headers["chat_id"] = self.chat_id
+            self.headers["X-Chat-ID"] = self.chat_id
 
     def __before_jwt_request(self):
         if self.token:
             self.headers["Authorization"] = f"Bearer {self.token}"
         if self.agent_id:
-            self.headers["agent_id"] = self.agent_id
+            self.headers["X-Agent-ID"] = self.agent_id
         if self.chat_id:
-            self.headers["chat_id"] = self.chat_id
+            self.headers["X-Chat-ID"] = self.chat_id
 
     def get_client(
         self,
