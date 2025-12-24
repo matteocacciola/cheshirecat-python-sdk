@@ -1,7 +1,7 @@
 from typing import Any
 
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
-from cheshirecat_python_sdk.models.api.tokens import TokenOutput
+from cheshirecat_python_sdk.models.api.tokens import TokenOutput, MeOutput
 from cheshirecat_python_sdk.utils import deserialize
 
 
@@ -10,7 +10,7 @@ class AuthEndpoint(AbstractEndpoint):
         super().__init__(client)
         self.prefix = "/auth"
 
-    def token(self, username: str, password: str, agent_id: str | None = None) -> TokenOutput:
+    def token(self, username: str, password: str) -> TokenOutput:
         """
         This endpoint is used to get a token for the user. The token is used to authenticate the user in the system. When
         the token expires, the user must request a new token.
@@ -21,7 +21,6 @@ class AuthEndpoint(AbstractEndpoint):
                 "username": username,
                 "password": password,
             },
-            headers={"X-Agent-ID": agent_id} if agent_id else None,
         )
         response.raise_for_status()
 
@@ -40,3 +39,16 @@ class AuthEndpoint(AbstractEndpoint):
         response.raise_for_status()
 
         return response.json()
+
+    def me(self, token: str) -> MeOutput:
+        """
+        This endpoint is used to get the current user information. The user information includes the list of agents
+        the user has access to. This endpoint requires authentication.
+        """
+        self.client.add_token(token)
+
+        response = self.get_http_client().get("/me")
+        response.raise_for_status()
+
+        result = deserialize(response.json(), MeOutput)
+        return result
