@@ -16,6 +16,8 @@ class ConversationsResponse(BaseModel):
     chat_id: str
     name: str
     num_messages: int
+    created_at: float | None
+    updated_at: float | None
 
 
 class ConversationNameChangeOutput(BaseModel):
