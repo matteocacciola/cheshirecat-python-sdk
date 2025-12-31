@@ -10,12 +10,12 @@ class User(BaseModel):
     id: str
     username: str
     permissions: dict[str, list[str]]
+    created_at: float | None = None
+    updated_at: float | None = None
 
 
 class AgentMatch(BaseModel):
-    agent_id: str
     agent_name: str
-    agent_description: str | None = None
     user: User
 
 
