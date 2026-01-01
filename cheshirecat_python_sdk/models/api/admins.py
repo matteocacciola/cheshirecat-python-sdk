@@ -1,13 +1,7 @@
-from typing import Dict, List, Any
+from typing import Dict, Any
 from pydantic import BaseModel
 
 from cheshirecat_python_sdk.models.api.plugins import PluginToggleOutput
-
-
-class AdminOutput(BaseModel):
-    username: str
-    permissions: Dict[str, List[str]]
-    id: str
 
 
 class CreatedOutput(BaseModel):
