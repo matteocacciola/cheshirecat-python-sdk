@@ -11,7 +11,12 @@ class UsersEndpoint(AbstractEndpoint):
         self.prefix = "/users"
 
     def post_user(
-        self, agent_id: str, username: str, password: str, permissions: dict[str, Any] | None = None
+        self,
+        agent_id: str,
+        username: str,
+        password: str,
+        permissions: dict[str, Any] | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> UserOutput:
         """
         This endpoint is used to create a new user in the system. The user is created with the specified username and
@@ -22,6 +27,7 @@ class UsersEndpoint(AbstractEndpoint):
         :param username: The username of the user to create
         :param password: The password of the user to create
         :param permissions: The permissions of the user to create (optional)
+        :param metadata: The metadata of the user to create (optional)
         :return UserOutput, the created user
         """
         payload = {
@@ -30,6 +36,9 @@ class UsersEndpoint(AbstractEndpoint):
         }
         if permissions is not None:
             payload["permissions"] = permissions  # type: ignore
+
+        if metadata is not None:
+            payload["metadata"] = metadata  # type: ignore
 
         return self.post_json(
             self.prefix,
@@ -75,6 +84,7 @@ class UsersEndpoint(AbstractEndpoint):
         username: str | None = None,
         password: str | None = None,
         permissions: Dict[str, Any] | None = None,
+        metadata: Dict[str, Any] | None = None,
     ) -> UserOutput:
         """
         The endpoint is used to update the user in the system. The user is identified by the userId parameter, previously
@@ -87,6 +97,7 @@ class UsersEndpoint(AbstractEndpoint):
         :param username: The new username of the user (optional)
         :param password: The new password of the user (optional)
         :param permissions: The new permissions of the user (optional)
+        :param metadata: The new metadata of the user (optional)
         :return UserOutput, the updated user
         """
         payload = {}
@@ -96,6 +107,8 @@ class UsersEndpoint(AbstractEndpoint):
             payload["password"] = password
         if permissions is not None:
             payload["permissions"] = permissions
+        if metadata is not None:
+            payload["metadata"] = metadata
 
         return self.put(self.format_url(user_id), agent_id, output_class=UserOutput, payload=payload)
 
