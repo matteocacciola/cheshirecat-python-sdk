@@ -1,4 +1,5 @@
 from cheshirecat_python_sdk.endpoints.admins import AdminsEndpoint
+from cheshirecat_python_sdk.endpoints.agentic_workflow import AgenticWorkflowEndpoint
 from cheshirecat_python_sdk.endpoints.auth import AuthEndpoint
 from cheshirecat_python_sdk.endpoints.auth_handler import AuthHandlerEndpoint
 from cheshirecat_python_sdk.endpoints.chunker import ChunkerEndpoint

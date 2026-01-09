@@ -18,6 +18,7 @@ from cheshirecat_python_sdk.endpoints import (
     UtilsEndpoint,
     VectorDatabaseEndpoint,
     HealthCheckEndpoint,
+    AgenticWorkflowEndpoint,
 )
 
 
@@ -63,6 +64,10 @@ class CheshireCatClient:
     @property
     def auth_handler(self):
         return AuthHandlerEndpoint(self)
+
+    @property
+    def agentic_workflow(self):
+        return AgenticWorkflowEndpoint(self)
 
     @property
     def chunker(self):
