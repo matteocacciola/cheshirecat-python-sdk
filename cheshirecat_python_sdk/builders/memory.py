@@ -1,26 +1,7 @@
 from typing import Dict, Any
 
 from cheshirecat_python_sdk.builders.base import BaseBuilder
-from cheshirecat_python_sdk.models.dtos import Memory, MemoryPoint
-
-
-class MemoryBuilder(BaseBuilder):
-    def __init__(self):
-        self.declarative: Dict[str, Any] | None = None
-
-    @staticmethod
-    def create():
-        return MemoryBuilder()
-
-    def set_declarative(self, declarative: Dict[str, Any] | None = None):
-        self.declarative = declarative or {}
-        return self
-
-    def build(self):
-        memory = Memory()
-        memory.declarative = self.declarative
-
-        return memory
+from cheshirecat_python_sdk.models.dtos import MemoryPoint
 
 
 class MemoryPointBuilder(BaseBuilder):

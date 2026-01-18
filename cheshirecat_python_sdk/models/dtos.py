@@ -2,10 +2,6 @@ from typing import Dict, List, Any
 from pydantic import BaseModel, Field
 
 
-class Memory(BaseModel):
-    declarative: List | None = Field(default_factory=list)
-
-
 class MemoryPoint(BaseModel):
     content: str
     metadata: Dict[str, Any]
@@ -29,4 +25,4 @@ class SettingInput(BaseModel):
 class Why(BaseModel):
     input: str | None = None
     intermediate_steps: List | None = Field(default_factory=list)
-    memory: Memory = Field(default_factory=Memory)
+    memory: List | None = Field(default_factory=list)

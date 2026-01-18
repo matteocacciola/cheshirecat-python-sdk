@@ -1,14 +1,14 @@
-from typing import Dict, Any
+from typing import List
 
 from cheshirecat_python_sdk.builders.base import BaseBuilder
-from cheshirecat_python_sdk.models.dtos import Memory, Why
+from cheshirecat_python_sdk.models.dtos import Why
 
 
 class WhyBuilder(BaseBuilder):
     def __init__(self):
         self.input: str | None = None
-        self.intermediate_steps: Dict[str, Any] | None = None
-        self.memory: Memory | None = None
+        self.intermediate_steps: List | None = []
+        self.memory: List | None = []
 
     @staticmethod
     def create() -> "WhyBuilder":
@@ -18,12 +18,12 @@ class WhyBuilder(BaseBuilder):
         self.input = input
         return self
 
-    def set_intermediate_steps(self, intermediate_steps: Dict[str, Any] | None = None) -> "WhyBuilder":
-        self.intermediate_steps = intermediate_steps
+    def set_intermediate_steps(self, intermediate_steps: List | None = None) -> "WhyBuilder":
+        self.intermediate_steps = intermediate_steps or []
         return self
 
-    def set_memory(self, memory: Memory) -> "WhyBuilder":
-        self.memory = memory
+    def set_memory(self, memory: List | None = None) -> "WhyBuilder":
+        self.memory = memory or []
         return self
 
     def build(self) -> Why:
