@@ -85,6 +85,7 @@ class MemoryEndpoint(AbstractEndpoint):
         user_id: str,
         k: int | None = None,
         metadata: Dict[str, Any] | None = None,
+        chat_id: str | None = None,
     ) -> MemoryRecallOutput:
         """
         This endpoint retrieves memory points based on the input text. The text parameter is the input text for which
@@ -94,6 +95,7 @@ class MemoryEndpoint(AbstractEndpoint):
         :param user_id: The user ID to filter the memory points.
         :param k: The number of memory points to retrieve.
         :param metadata: The metadata to filter the memory points.
+        :param chat_id: The chat id, optional
         :return: MemoryRecallOutput, a list of memory points retrieved.
         """
         query = {"text": text}
@@ -108,6 +110,7 @@ class MemoryEndpoint(AbstractEndpoint):
             output_class=MemoryRecallOutput,
             user_id=user_id,
             query=query,
+            chat_id=chat_id,
         )
 
     def post_memory_point(

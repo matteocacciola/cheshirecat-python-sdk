@@ -53,22 +53,24 @@ class FileManagerEndpoint(AbstractEndpoint):
             payload=values,
         )
 
-    def get_file_manager_attributes(self, agent_id: str) -> FileManagerAttributes:
+    def get_file_manager_attributes(self, agent_id: str, chat_id: str | None = None) -> FileManagerAttributes:
         """
         Get the attributes of the file manager for the agent specified by agent_id
         :param agent_id: The agent id
+        :param chat_id: The chat id, optional
         :return: FileManagerAttributes, the attributes of the file manager
         """
-        return self.get(self.prefix, agent_id, output_class=FileManagerAttributes)
+        return self.get(self.prefix, agent_id, output_class=FileManagerAttributes, chat_id=chat_id)
 
-    def get_file(self, agent_id: str, file_name: str) -> Response:
+    def get_file(self, agent_id: str, file_name: str, chat_id: str | None = None) -> Response:
         """
         Download a file from the file manager for the agent specified by agent_id
         :param agent_id: The agent id
         :param file_name: The name of the file to download
+        :param chat_id: The chat id, optional
         :return: Response, the response containing the file content
         """
-        response = self.get_http_client(agent_id).get(
+        response = self.get_http_client(agent_id, chat_id=chat_id).get(
             self.format_url(f"/files/{file_name}"),
             stream=True,
             headers={"Accept": "application/octet-stream"}
@@ -77,27 +79,31 @@ class FileManagerEndpoint(AbstractEndpoint):
 
         return response
 
-    def delete_file(self, agent_id: str, file_name: str) -> FileManagerDeletedFiles:
+    def delete_file(self, agent_id: str, file_name: str, chat_id: str | None = None) -> FileManagerDeletedFiles:
         """
         Download a file from the file manager for the agent specified by agent_id
         :param agent_id: The agent id
         :param file_name: The name of the file to delete
+        :param chat_id: The chat id, optional
         :return: FileManagerDeletedFiles, the response containing info about the deleted file
         """
         return self.delete(
             self.format_url(f"/files/{file_name}"),
             agent_id,
             output_class=FileManagerDeletedFiles,
+            chat_id=chat_id,
         )
 
-    def delete_files(self, agent_id: str) -> FileManagerDeletedFiles:
+    def delete_files(self, agent_id: str, chat_id: str | None = None) -> FileManagerDeletedFiles:
         """
         Download a file from the file manager for the agent specified by agent_id
         :param agent_id: The agent id
+        :param chat_id: The chat id, optional
         :return: bool, True if all files were deleted successfully
         """
         return self.delete(
             self.format_url("/files"),
             agent_id,
             output_class=FileManagerDeletedFiles,
+            chat_id=chat_id,
         )

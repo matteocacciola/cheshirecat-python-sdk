@@ -158,14 +158,16 @@ class RabbitHoleEndpoint(AbstractEndpoint):
             output_class=AllowedMimeTypesOutput
         )
 
-    def get_web_sources(self, agent_id: str) -> List[str]:
+    def get_web_sources(self, agent_id: str, chat_id: str | None = None) -> List[str]:
         """
         This method retrieves the web sources for the RabbitHole API. The web sources are the web URLs that are allowed
         to be uploaded to the RabbitHole API. The web sources are returned in a list.
         :param agent_id: The ID of the agent.
+        :param chat_id: The chat id, optional
         :return: List[str]
         """
         return self.get(
             self.format_url("/web"),
             agent_id,
+            chat_id=chat_id,
         )

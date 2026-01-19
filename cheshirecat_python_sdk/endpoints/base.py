@@ -43,12 +43,13 @@ class AbstractEndpoint(ABC):
         output_class: Type[T] | None = None,
         query: Dict[str, Any] | None = None,
         user_id: str | None = None,
+        chat_id: str | None = None,
     ) -> T:
         options = {}
         if query:
             options["params"] = query
 
-        response = self.get_http_client(agent_id, user_id).get(endpoint, **options)
+        response = self.get_http_client(agent_id, user_id, chat_id).get(endpoint, **options)
         response.raise_for_status()
 
         if output_class is None:
@@ -103,12 +104,13 @@ class AbstractEndpoint(ABC):
         output_class: Type[T] | None = None,
         payload: Dict[str, Any] | None = None,
         user_id: str | None = None,
+        chat_id: str | None = None,
     ) -> T:
         options = {}
         if payload:
             options["json"] = payload
 
-        response = self.get_http_client(agent_id, user_id).put(endpoint, **options)
+        response = self.get_http_client(agent_id, user_id, chat_id).put(endpoint, **options)
         response.raise_for_status()
 
         if output_class is None:
@@ -121,13 +123,14 @@ class AbstractEndpoint(ABC):
         agent_id: str,
         output_class: Type[T] | None = None,
         user_id: str | None = None,
+        chat_id: str | None = None,
         payload: Dict[str, Any] | None = None,
     ) -> T:
         options = {}
         if payload:
             options["json"] = payload
 
-        response = self.get_http_client(agent_id, user_id).delete(endpoint, **options)
+        response = self.get_http_client(agent_id, user_id, chat_id).delete(endpoint, **options)
         response.raise_for_status()
 
         if output_class is None:
