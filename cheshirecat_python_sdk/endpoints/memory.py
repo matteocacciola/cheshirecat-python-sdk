@@ -267,6 +267,6 @@ class MemoryEndpoint(AbstractEndpoint):
         collection_name = "declarative" if chat_id is None else "episodic"
         points = self.get_memory_points(collection_name, agent_id, metadata=metadata)
 
-        return len(points.data) > 0
+        return len(points.points) > 0
 
     # END Memory Points API
