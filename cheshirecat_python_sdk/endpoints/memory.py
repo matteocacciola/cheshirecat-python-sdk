@@ -12,7 +12,7 @@ from cheshirecat_python_sdk.models.api.memories import (
     MemoryPointsOutput,
 )
 from cheshirecat_python_sdk.models.api.nested.memories import CollectionsItem
-from cheshirecat_python_sdk.models.dtos import Why, MemoryPoint
+from cheshirecat_python_sdk.models.dtos import Why, MemoryPoint, FilterSource
 
 
 class MemoryEndpoint(AbstractEndpoint):
@@ -241,5 +241,32 @@ class MemoryEndpoint(AbstractEndpoint):
             output_class=MemoryPointsOutput,
             query=query,
         )
+
+    def has_source(self, agent_id: str, filter_source: FilterSource, chat_id: str | None = None) -> bool:
+        """
+        Checks if the given filter source exists for a specified agent.
+
+        This method determines whether a specific source, defined by the given filter_source, is associated with the
+        provided agent in the memory database.
+        It optionally considers a specific chat ID when filtering the data. The result indicates the existence of such a
+        source.
+
+        Args:
+            agent_id: Unique identifier of the agent for which the check is performed.
+            filter_source: FilterSource object that defines the source or hash to check.
+            chat_id: An optional chat identifier to narrow the scope of the check. If not provided, the check will
+                operate in a broader context.
+
+        Returns:
+            A boolean value indicating whether the specified filter source exists in the agent's memory database.
+        """
+        metadata = {"source": filter_source.source} if filter_source.source else {"hash": filter_source.hash}
+        if chat_id:
+            metadata["chat_id"] = chat_id
+
+        collection_name = "declarative" if chat_id is None else "episodic"
+        points = self.get_memory_points(collection_name, agent_id, metadata=metadata)
+
+        return len(points.data) > 0
 
     # END Memory Points API
