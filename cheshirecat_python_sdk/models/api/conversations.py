@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any, Dict
 from pydantic import BaseModel
 
 from cheshirecat_python_sdk.models.api.nested.memories import ConversationMessage
@@ -16,9 +16,10 @@ class ConversationsResponse(BaseModel):
     chat_id: str
     name: str
     num_messages: int
+    metadata: Dict[str, Any]
     created_at: float | None
     updated_at: float | None
 
 
-class ConversationNameChangeOutput(BaseModel):
+class ConversationAttributesChangeOutput(BaseModel):
     changed: bool

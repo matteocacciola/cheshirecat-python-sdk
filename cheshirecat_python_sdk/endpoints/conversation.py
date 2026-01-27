@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Dict
 
 from cheshirecat_python_sdk.endpoints.base import AbstractEndpoint
 from cheshirecat_python_sdk.models.api.conversations import (
     ConversationHistoryOutput,
     ConversationDeleteOutput,
     ConversationsResponse,
-    ConversationNameChangeOutput,
+    ConversationAttributesChangeOutput,
 )
 from cheshirecat_python_sdk.utils import deserialize
 
@@ -13,7 +13,7 @@ from cheshirecat_python_sdk.utils import deserialize
 class ConversationEndpoint(AbstractEndpoint):
     def __init__(self, client: "CheshireCatClient"):
         super().__init__(client)
-        self.prefix = "/conversation"
+        self.prefix = "/conversations"
 
     def get_conversation_history(self, agent_id: str, user_id: str, chat_id: str) -> ConversationHistoryOutput:
         """
@@ -24,7 +24,7 @@ class ConversationEndpoint(AbstractEndpoint):
         :return: ConversationHistoryOutput, a list of conversation history entries.
         """
         return self.get(
-            self.format_url(chat_id),
+            self.format_url(f"{chat_id}/history"),
             agent_id,
             user_id=user_id,
             output_class=ConversationHistoryOutput,
@@ -42,6 +42,22 @@ class ConversationEndpoint(AbstractEndpoint):
 
         return [deserialize(item, ConversationsResponse) for item in response.json()]
 
+    def get_conversation(self, agent_id: str, user_id: str, chat_id: str) -> ConversationsResponse:
+        """
+        This endpoint returns the attributes of a specific conversation, given the `agent_id`, the `user_id` and the
+        `chat_id`.
+        :param agent_id: The agent ID.
+        :param user_id: The user ID to filter the conversation history.
+        :param chat_id: The chat ID to filter the conversation history.
+        :return: ConversationsResponse, the conversation attributes.
+        """
+        return self.get(
+            self.format_url(chat_id),
+            agent_id,
+            user_id=user_id,
+            output_class=ConversationsResponse,
+        )
+
     def delete_conversation(self, agent_id: str, user_id: str, chat_id: str) -> ConversationDeleteOutput:
         """
         This endpoint deletes the conversation.
@@ -57,27 +73,36 @@ class ConversationEndpoint(AbstractEndpoint):
             user_id=user_id,
         )
 
-    def post_conversation_name(
+    def put_conversation_attributes(
         self,
-        name: str,
         agent_id: str,
         user_id: str,
         chat_id: str,
-    ) -> ConversationNameChangeOutput:
+        name: str | None,
+        metadata: Dict | None = None,
+    ) -> ConversationAttributesChangeOutput:
         """
         This endpoint creates a new element in the conversation history.
-        :param name: The new name to assign to the conversation
         :param agent_id: The agent ID.
         :param user_id: The user ID to filter the conversation history.
         :param chat_id: The chat ID to filter the conversation history.
+        :param name: The new name to assign to the conversation
+        :param metadata: The metadata to assign to the conversation
         :return: ConversationNameChangeOutput, a message indicating whether the conversation name was changed.
         """
-        payload = {"name": name}
+        if not name and not metadata:
+            raise ValueError("Either name or metadata must be provided")
 
-        return self.post_json(
+        payload = {}
+        if name:
+            payload = {"name": name}
+        if metadata:
+            payload["metadata"] = metadata
+
+        return self.put(
             self.format_url(chat_id),
             agent_id,
-            output_class=ConversationNameChangeOutput,
+            output_class=ConversationAttributesChangeOutput,
             payload=payload,
             user_id=user_id,
         )
