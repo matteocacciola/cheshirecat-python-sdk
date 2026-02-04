@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from cheshirecat_python_sdk.models.api.plugins import PluginToggleOutput
 
 
-class CreatedOutput(BaseModel):
+class AgentCreatedOutput(BaseModel):
     created: bool
 
 
@@ -32,5 +32,14 @@ class ResetOutput(BaseModel):
     deleted_plugin_folders: bool
 
 
-class ClonedOutput(BaseModel):
+class AgentClonedOutput(BaseModel):
     cloned: bool = False
+
+
+class AgentUpdatedOutput(BaseModel):
+    updated: bool
+
+
+class AgentOutput(BaseModel):
+    agent_id: str
+    metadata: Dict

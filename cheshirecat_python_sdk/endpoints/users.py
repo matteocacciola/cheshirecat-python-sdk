@@ -59,10 +59,7 @@ class UsersEndpoint(AbstractEndpoint):
         response = self.get_http_client(agent_id).get(self.prefix)
         response.raise_for_status()
 
-        result = []
-        for item in response.json():
-            result.append(deserialize(item, UserOutput))
-        return result
+        return [deserialize(item, UserOutput) for item in response.json()]
 
     def get_user(self, user_id: str, agent_id: str) -> UserOutput:
         """
